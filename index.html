@@ -3,7 +3,12 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0d9488">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2892/2892404.png">
   <title>ModSeat Cairo — أثاث مكتبي متكامل</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Cairo+Play:wght@400;600;700;900&display=swap"
@@ -1759,6 +1764,77 @@
       }
     }
 
+    .product-details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .details-image {
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 500px;
+    }
+
+    .details-image img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .details-info {
+      padding: 2.5rem;
+      overflow-y: auto;
+      max-height: 80vh;
+    }
+
+    .details-section {
+      margin-bottom: 2rem;
+    }
+
+    .details-section h4 {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .specs-grid {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .specs-grid li {
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.95rem;
+    }
+
+    .details-footer {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    @media (max-width: 768px) {
+      .product-details-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .details-image {
+        height: 300px;
+      }
+
+      .details-info {
+        padding: 1.5rem;
+      }
+    }
+
     /* ===== ADMIN PANEL ===== */
     #admin-panel {
       display: none
@@ -1951,6 +2027,53 @@
       background: rgba(13, 148, 136, .02)
     }
 
+    .product-details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      height: 100%;
+    }
+
+    .details-image {
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .details-image img {
+      max-width: 100%;
+      max-height: 450px;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .details-info {
+      padding: 2.5rem;
+      background: var(--surface);
+      overflow-y: auto;
+    }
+
+    @media (max-width: 768px) {
+      .product-details-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .details-image {
+        padding: 1rem;
+        height: 300px;
+      }
+
+      .details-image img {
+        max-height: 260px;
+      }
+
+      .details-info {
+        padding: 1.5rem;
+      }
+    }
+
     .product-cell {
       display: flex;
       align-items: center;
@@ -2120,6 +2243,83 @@
 
     .toast.info {
       background: #3b82f6
+    }
+
+    /* ===== PWA INSTALL BANNER ===== */
+    .pwa-banner {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      transform: translateY(150%);
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .pwa-banner.show {
+      transform: translateY(0);
+    }
+
+    .pwa-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .pwa-text {
+      flex: 1;
+    }
+
+    .pwa-text h5 {
+      font-size: 0.95rem;
+      font-weight: 900;
+      margin-bottom: 2px;
+    }
+
+    .pwa-text p {
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .pwa-btns {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-install-pwa {
+      padding: 8px 16px;
+      border-radius: 10px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      font-weight: 900;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+
+    .btn-close-pwa {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 5px;
     }
 
     /* ===== FOOTER ===== */
@@ -2331,8 +2531,44 @@
       }
 
       .products-grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 1rem;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+      }
+
+      .product-card {
+        border-radius: 12px;
+      }
+
+      .product-img {
+        height: 140px;
+      }
+
+      .product-body {
+        padding: 0.75rem;
+      }
+
+      .product-name {
+        font-size: 0.85rem;
+      }
+
+      .product-price {
+        font-size: 0.9rem;
+      }
+
+      .product-specs,
+      .color-selector,
+      .size-selector {
+        display: none !important;
+        /* أخفي التفاصيل في الشبكة لتوفير المساحة */
+      }
+
+      .product-footer {
+        margin-top: 0.5rem;
+      }
+
+      .add-cart-btn {
+        padding: 8px;
+        font-size: 0.75rem;
       }
     }
 
@@ -2361,6 +2597,19 @@
 </head>
 
 <body>
+
+  <!-- PWA INSTALL BANNER -->
+  <div id="pwa-install-banner" class="pwa-banner">
+    <div class="pwa-icon">M</div>
+    <div class="pwa-text">
+      <h5 data-i18n="installApp">تثبيت تطبيق ModSeat</h5>
+      <p data-i18n="installDesc">تصفح الموديلات بشكل أسرع وتابع طلباتك بسهولة</p>
+    </div>
+    <div class="pwa-btns">
+      <button class="btn-install-pwa" id="pwa-install-btn" data-i18n="install">تثبيت</button>
+      <button class="btn-close-pwa" onclick="hidePwaBanner()">✕</button>
+    </div>
+  </div>
 
   <!-- ===== SPLASH SCREEN ===== -->
   <div id="splash-screen">
@@ -2557,7 +2806,7 @@
               </div>
               <div class="form-group">
                 <label data-i18n="companyPhone">رقم هاتف التواصل</label>
-                <input type="tel" id="company-phone" placeholder="01X XXXX XXXX" dir="ltr" required>
+                <input type="tel" id="company-phone" placeholder="01X XXXX XXXX" dir="ltr" required maxlength="11">
               </div>
               <div class="form-group">
                 <label data-i18n="province">المحافظة</label>
@@ -2565,14 +2814,36 @@
                   <option value="" data-i18n="province">اختر المحافظة...</option>
                   <option>القاهرة</option>
                   <option>الجيزة</option>
-                  <option>القليوبية</option>
                   <option>الإسكندرية</option>
+                  <option>الدقهلية</option>
+                  <option>البحر الأحمر</option>
+                  <option>البحيرة</option>
+                  <option>الفيوم</option>
+                  <option>الغربية</option>
+                  <option>الإسماعيلية</option>
+                  <option>المنوفية</option>
+                  <option>المنيا</option>
+                  <option>القليوبية</option>
+                  <option>الوادي الجديد</option>
+                  <option>السويس</option>
                   <option>الشرقية</option>
+                  <option>دمياط</option>
+                  <option>بورسعيد</option>
+                  <option>جنوب سيناء</option>
+                  <option>كفر الشيخ</option>
+                  <option>مطروح</option>
+                  <option>الأقصر</option>
+                  <option>قنا</option>
+                  <option>شمال سيناء</option>
+                  <option>سوهاج</option>
+                  <option>بني سويف</option>
+                  <option>أسيوط</option>
+                  <option>أسوان</option>
                 </select>
               </div>
               <button class="btn-primary" style="width:100%;justify-content:center" onclick="submitMeasurement()"
                 data-i18n="confirmBooking">
-                تأكيد الحجز المجاني
+                تواصل معنا
               </button>
             </div>
           </div>
@@ -2868,11 +3139,11 @@
           <div class="form-row">
             <div class="form-group"><label>الاسم الكامل</label><input type="text" id="c-name" placeholder="محمد أحمد">
             </div>
-            <div class="form-group"><label>رقم الهاتف</label><input type="tel" id="c-phone" placeholder="01X XXXX XXXX"
-                dir="ltr"></div>
+            <div class="form-group"><label>رقم الهاتف الأول</label><input type="tel" id="c-phone"
+                placeholder="01X XXXX XXXX" dir="ltr" maxlength="11"></div>
+            <div class="form-group"><label>رقم الهاتف الثاني</label><input type="tel" id="c-phone2"
+                placeholder="01X XXXX XXXX" dir="ltr" maxlength="11"></div>
           </div>
-          <div class="form-group"><label>البريد الإلكتروني (اختياري)</label><input type="email" id="c-email"
-              placeholder="example@email.com" dir="ltr"></div>
           <div class="form-group"><label>اسم الشركة (اختياري)</label><input type="text" id="c-company"
               placeholder="اسم الشركة أو المؤسسة"></div>
           <div class="modal-actions">
@@ -2889,9 +3160,31 @@
               <option value="">اختر المحافظة</option>
               <option>القاهرة</option>
               <option>الجيزة</option>
-              <option>القليوبية</option>
               <option>الإسكندرية</option>
+              <option>الدقهلية</option>
+              <option>البحر الأحمر</option>
+              <option>البحيرة</option>
+              <option>الفيوم</option>
+              <option>الغربية</option>
+              <option>الإسماعيلية</option>
+              <option>المنوفية</option>
+              <option>المنيا</option>
+              <option>القليوبية</option>
+              <option>الوادي الجديد</option>
+              <option>السويس</option>
               <option>الشرقية</option>
+              <option>دمياط</option>
+              <option>بورسعيد</option>
+              <option>جنوب سيناء</option>
+              <option>كفر الشيخ</option>
+              <option>مطروح</option>
+              <option>الأقصر</option>
+              <option>قنا</option>
+              <option>شمال سيناء</option>
+              <option>سوهاج</option>
+              <option>بني سويف</option>
+              <option>أسيوط</option>
+              <option>أسوان</option>
             </select>
           </div>
           <div class="form-group"><label>العنوان بالتفصيل</label><textarea id="c-address"
@@ -2933,6 +3226,45 @@
             <h4>تم تسجيل طلبك بنجاح!</h4>
             <p>شكراً لثقتك في ModSeat Cairo. سيتواصل معك فريقنا خلال 24 ساعة لتأكيد الطلب وتحديد موعد التوصيل.</p>
             <div class="order-number" id="order-number-display">MS-0001</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCT DETAILS MODAL -->
+  <div id="product-modal" class="modal-overlay">
+    <div class="modal" style="max-width:900px; padding:0; overflow:hidden">
+      <button class="close-btn" onclick="closeProductModal()"
+        style="position:absolute; top:15px; left:15px; z-index:10; background:rgba(255,255,255,0.8); border-radius:50%; width:32px; height:32px">✕</button>
+      <div class="product-details-grid">
+        <div class="details-image">
+          <img id="details-img" src="" alt="">
+        </div>
+        <div class="details-info" style="text-align:right">
+          <div id="details-category" class="category-tag"></div>
+          <h2 id="details-name" style="font-size:1.6rem; margin:1rem 0; font-weight:900"></h2>
+          <div id="details-price" class="product-price" style="font-size:1.4rem; margin-bottom:1.5rem"></div>
+
+          <div class="details-section">
+            <h4 style="font-size:0.9rem; color:var(--muted); margin-bottom:0.75rem">المواصفات</h4>
+            <ul id="details-specs-list" style="list-style:none; display:grid; gap:0.5rem"></ul>
+          </div>
+
+          <div class="details-section" id="details-colors-section">
+            <h4 style="font-size:0.9rem; color:var(--muted); margin-bottom:0.75rem">الألوان المتاحة</h4>
+            <div id="details-colors-list" class="color-selector"></div>
+          </div>
+
+          <div class="details-section" id="details-sizes-section">
+            <h4 style="font-size:0.9rem; color:var(--muted); margin-bottom:0.75rem">المقاسات</h4>
+            <div id="details-sizes-list" class="size-selector"></div>
+          </div>
+
+          <div id="details-selected-badge" class="selected-opts-badge" style="margin:1.5rem 0; display:none"></div>
+
+          <div style="margin-top:2rem">
+            <div id="details-cart-action"></div>
           </div>
         </div>
       </div>
@@ -2991,7 +3323,7 @@
             <div style="display:flex;gap:8px;align-items:center;width:100%;margin-bottom:8px">
               <input type="color" id="np-color-picker" value="#0d9488"
                 style="width:44px;height:38px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;padding:2px;background:var(--surface)">
-              <input type="text" id="np-color-name" placeholder="اسم اللون (مثال: خشبي فاتح)..."
+              <input type="text" id="np-color-name" placeholder="اسم اللون..."
                 style="flex:1;min-width:120px;padding:10px 14px;border-radius:10px;border:1.5px solid var(--border);font-family:'Cairo',sans-serif;font-size:.88rem;background:var(--surface);color:var(--text);outline:none">
             </div>
             <div style="display:flex;gap:8px;align-items:center;width:100%">
@@ -3000,18 +3332,17 @@
                   style="position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2">
                 <div
                   style="padding:10px;border:1.5px dashed var(--primary);border-radius:10px;text-align:center;font-size:0.75rem;color:var(--primary);font-weight:700">
-                  🖼️ ارفع صورة للون</div>
+                  🖼️ صورة اللون</div>
               </div>
-              <input type="url" id="np-color-image-url" placeholder="أو رابط الصورة..."
+              <input type="url" id="np-color-image-url" placeholder="رابط..."
                 style="flex:1.5;min-width:120px;padding:10px 14px;border-radius:10px;border:1.5px solid var(--border);font-family:'Cairo',sans-serif;font-size:.82rem;background:var(--surface);color:var(--text);outline:none">
               <button type="button" onclick="addColorToList()"
-                style="padding:12px 20px;border-radius:10px;background:var(--primary);color:#fff;border:none;font-family:'Cairo',sans-serif;font-weight:900;font-size:.85rem;cursor:pointer;white-space:nowrap;box-shadow:0 4px 12px rgba(20,184,166,0.2)">+
-                إضافة</button>
+                style="padding:12px;border-radius:10px;background:var(--bg);color:var(--primary);border:1.5px solid var(--primary);font-family:'Cairo',sans-serif;font-weight:900;font-size:.85rem;cursor:pointer;white-space:nowrap">حفظ
+                اللون</button>
             </div>
           </div>
-          <small style="color:var(--muted);font-size:.75rem;margin-top:4px;display:block">الصورة اختيارية، إذا لم ترفعها
-            ستظهر الصورة الرئيسية للمنتج</small>
         </div>
+
 
         <!-- SIZES SECTION -->
         <div class="form-group">
@@ -3484,12 +3815,12 @@
         `;
 
         return `<div class="product-card animate-in" style="animation-delay:${i * 0.07}s">
-      <div class="product-img">
+      <div class="product-img" onclick="openProductDetails(${p.id})">
         <img id="main-img-${p.id}" src="${p.image}" alt="${name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600'">
         <div class="product-badge">${usage}</div>
       </div>
       <div class="product-body">
-        <div class="product-header">
+        <div class="product-header" onclick="openProductDetails(${p.id})">
           <div class="product-name">${name}</div>
           <div class="product-price">${currentLang === 'ar' ? p.price.toLocaleString('ar-EG') : p.price.toLocaleString('en-US')} ${currentLang === 'ar' ? 'ج.م' : 'EGP'}</div>
         </div>
@@ -3504,6 +3835,82 @@
       </div>
     </div>`;
       }).join('');
+    }
+
+    function openProductDetails(id) {
+      const p = products.find(x => x.id === id);
+      if (!p) return;
+
+      const name = currentLang === 'ar' ? p.name : (p.enName || p.name);
+      document.getElementById('details-name').textContent = name;
+      document.getElementById('details-img').src = p.image;
+      document.getElementById('details-price').textContent = `${currentLang === 'ar' ? p.price.toLocaleString('ar-EG') : p.price.toLocaleString('en-US')} ${currentLang === 'ar' ? 'ج.م' : 'EGP'}`;
+      document.getElementById('details-category').textContent = currentLang === 'ar' ? p.category : (p.enCategory || p.category);
+
+      // Specs
+      const specsList = document.getElementById('details-specs-list');
+      const specs = currentLang === 'ar' ? p.specs : (p.enSpecs || p.specs);
+      specsList.innerHTML = Object.entries(specs).map(([k, v]) => `<li><strong>${k}:</strong> ${v}</li>`).join('');
+
+      // Colors
+      const colorsDiv = document.getElementById('details-colors-list');
+      if (p.colors && p.colors.length > 0) {
+        document.getElementById('details-colors-section').style.display = 'block';
+        colorsDiv.innerHTML = p.colors.map((c, ci) => {
+          const hex = typeof c === 'object' ? c.hex : c;
+          return `<div class="color-swatch" style="background:${hex}" onclick="selectColorInDetails(${p.id}, ${ci}, this)"></div>`;
+        }).join('');
+      } else {
+        document.getElementById('details-colors-section').style.display = 'none';
+      }
+
+      // Sizes
+      const sizesDiv = document.getElementById('details-sizes-list');
+      if (p.sizes && p.sizes.length > 0) {
+        document.getElementById('details-sizes-section').style.display = 'block';
+        sizesDiv.innerHTML = p.sizes.map((s, si) => `<span class="size-chip" onclick="selectSizeInDetails(${p.id}, ${si}, this)">${s}</span>`).join('');
+      } else {
+        document.getElementById('details-sizes-section').style.display = 'none';
+      }
+
+      // Cart Action
+      const cartAction = document.getElementById('details-cart-action');
+      const inCart = cart.find(x => x.id === p.id);
+      cartAction.innerHTML = inCart ?
+        `<div class="cart-controls">
+          <button class="qty-btn" onclick="changeQty(${p.id}, -1); openProductDetails(${p.id})">−</button>
+          <span class="qty-val">${inCart.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${p.id}, 1); openProductDetails(${p.id})">+</button>
+        </div>` :
+        `<button class="add-cart-btn" style="width:100%" onclick="addToCart(${p.id}); openProductDetails(${p.id})">${t('addToCart')}</button>`;
+
+      document.getElementById('product-modal').classList.add('open');
+    }
+
+    function selectColorInDetails(pid, idx, el) {
+      const p = products.find(x => x.id === pid);
+      if (!p) return;
+      const c = p.colors[idx];
+      const img = typeof c === 'object' ? c.image : null;
+      if (img) document.getElementById('details-img').src = img;
+
+      const parent = document.getElementById('details-colors-list');
+      parent.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+      el.classList.add('selected');
+
+      selectColor(pid, idx, el); // Sync with card logic
+    }
+
+    function selectSizeInDetails(pid, idx, el) {
+      const parent = document.getElementById('details-sizes-list');
+      parent.querySelectorAll('.size-chip').forEach(s => s.classList.remove('selected'));
+      el.classList.add('selected');
+
+      selectSize(pid, idx, el); // Sync with card logic
+    }
+
+    function closeProductModal() {
+      document.getElementById('product-modal').classList.remove('open');
     }
 
     function selectColor(pid, idx, el) {
@@ -3596,10 +4003,25 @@
       const product = products.find(p => p.id === id);
       if (!product) return;
       const existing = cart.find(x => x.id === id);
+      const selectedColor = product._selectedColor;
+      const selectedSize = product._selectedSize;
+      const cartImg = (selectedColor && typeof selectedColor === 'object' && selectedColor.image) ? selectedColor.image : product.image;
+
       if (existing) {
         existing.qty++;
+        // Update selection if user adds same product again with maybe a new selection?
+        // For simplicity, we keep the first selection or update it.
+        existing._selectedColor = selectedColor;
+        existing._selectedSize = selectedSize;
+        existing._cartImg = cartImg;
       } else {
-        cart.push({ ...product, qty: 1 });
+        cart.push({
+          ...product,
+          qty: 1,
+          _selectedColor: selectedColor,
+          _selectedSize: selectedSize,
+          _cartImg: cartImg
+        });
       }
       updateCartUI();
 
@@ -3706,7 +4128,9 @@
       if (n === 2) {
         const name = document.getElementById('c-name').value.trim();
         const phone = document.getElementById('c-phone').value.trim();
-        if (!name || !phone) { showToast('الرجاء إدخال الاسم ورقم الهاتف', 'error'); return }
+        const phone2 = document.getElementById('c-phone2').value.trim();
+        if (!name || !phone || !phone2) { showToast('الرجاء إدخال الاسم ورقمي الهاتف', 'error'); return }
+        if (phone.length !== 11 || phone2.length !== 11) { showToast('رقم الهاتف يجب أن يكون 11 رقم', 'error'); return }
       }
       if (n === 3) {
         const gov = document.getElementById('c-gov').value;
@@ -3734,6 +4158,7 @@
         id: `MS-${String(orders.length + 1).padStart(4, '0')}`,
         name: document.getElementById('c-name').value,
         phone: document.getElementById('c-phone').value,
+        phone2: document.getElementById('c-phone2').value,
         gov: document.getElementById('c-gov').value,
         address: document.getElementById('c-address').value,
         payment: document.getElementById('c-payment').value,
@@ -3743,7 +4168,8 @@
           qty: item.qty,
           price: item.price,
           selectedColor: item._selectedColor || null,
-          selectedSize: item._selectedSize || null
+          selectedSize: item._selectedSize || null,
+          image: item._cartImg || item.image
         })),
         total: cart.reduce((s, x) => s + x.price * x.qty, 0),
         date: new Date().toLocaleDateString('ar-EG')
@@ -3754,12 +4180,14 @@
         let line = `• ${x.name} (${x.qty} × ${x.price} ج.م)`;
         if (x.selectedColor) line += ` [اللون: ${typeof x.selectedColor === 'object' ? x.selectedColor.name : x.selectedColor}]`;
         if (x.selectedSize) line += ` [المقاس: ${x.selectedSize}]`;
+        line += `\n🔗 صورة المنتج: ${x.image}`;
         return line;
-      }).join('\n');
+      }).join('\n\n');
 
       const message = `طلب جديد: ${order.id}\n\n` +
         `👤 العميل: ${order.name}\n` +
-        `📞 الهاتف: ${order.phone}\n` +
+        `📞 هاتف 1: ${order.phone}\n` +
+        `📞 هاتف 2: ${order.phone2}\n` +
         `📍 المحافظة: ${order.gov}\n` +
         `🏠 العنوان: ${order.address}\n` +
         `💰 الدفع: ${order.payment === 'cash' ? 'كاش عند الاستلام' : order.payment}\n\n` +
@@ -4161,6 +4589,60 @@
       updateAdminStats();
       document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeCart(); closeCheckout(); closeAddProduct() } });
     });
+
+    // ===== PWA LOGIC =====
+    let deferredPrompt;
+    const pwaBanner = document.getElementById('pwa-install-banner');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      // Show banner after a short delay
+      setTimeout(() => {
+        pwaBanner.classList.add('show');
+      }, 5000);
+    });
+
+    document.getElementById('pwa-install-btn').addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+          console.log('User accepted the install prompt');
+        }
+        deferredPrompt = null;
+        pwaBanner.classList.remove('show');
+      }
+    });
+
+    function hidePwaBanner() {
+      pwaBanner.classList.remove('show');
+    }
+
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => {
+            console.log('SW Registered!', reg);
+
+            // Handle updates automatically
+            reg.onupdatefound = () => {
+              const installingWorker = reg.installing;
+              installingWorker.onstatechange = () => {
+                if (installingWorker.state === 'installed') {
+                  if (navigator.serviceWorker.controller) {
+                    // New update available
+                    showToast('تحديث جديد متاح، جاري التحميل...', 'info');
+                    setTimeout(() => window.location.reload(), 2000);
+                  }
+                }
+              };
+            };
+          })
+          .catch(err => console.log('SW Reg failed:', err));
+      });
+    }
   </script>
 </body>
 

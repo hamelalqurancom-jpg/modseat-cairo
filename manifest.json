@@ -1,0 +1,22 @@
+{
+  "name": "ModSeat Cairo",
+  "short_name": "ModSeat",
+  "description": "Premium Office Furniture in Egypt",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d9488",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2892/2892404.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2892/2892404.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
