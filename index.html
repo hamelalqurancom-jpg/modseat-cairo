@@ -45,6 +45,11 @@
       overflow-x: hidden;
       width: 100%;
       position: relative;
+      scroll-behavior: smooth;
+    }
+
+    #store-view {
+      padding-top: 72px;
     }
 
     body {
@@ -232,9 +237,11 @@
 
     /* ===== NAVBAR ===== */
     nav {
-      position: sticky;
+      position: fixed;
       top: 0;
-      z-index: 100;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
       background: var(--glass-bg);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
@@ -245,7 +252,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
     }
 
     .logo {
@@ -1202,30 +1209,47 @@
     /* Product card color/size selector */
     .color-selector {
       display: flex;
-      gap: 6px;
-      align-items: center;
       flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .color-option {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .color-option:hover {
+      border-color: var(--primary);
+    }
+
+    .color-option.selected {
+      border-color: var(--primary);
+      background: rgba(13, 148, 136, 0.05);
+      box-shadow: 0 2px 8px rgba(13, 148, 136, 0.1);
     }
 
     .color-swatch {
-      width: 22px;
-      height: 22px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
-      border: 2.5px solid rgba(255, 255, 255, .8);
-      box-shadow: 0 0 0 1.5px var(--border);
-      cursor: pointer;
-      transition: all .2s;
-      position: relative;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      flex-shrink: 0;
     }
 
-    .color-swatch:hover {
-      transform: scale(1.25);
+    .color-name {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text);
     }
 
-    .color-swatch.selected {
-      box-shadow: 0 0 0 2.5px var(--primary);
-      transform: scale(1.15);
-    }
 
     .size-selector {
       display: flex;
@@ -2029,7 +2053,7 @@
 
     .product-details-grid {
       display: grid;
-      grid-template-columns: 1fr 1.2fr;
+      grid-template-columns: 1fr 1.1fr;
       height: 100%;
     }
 
@@ -2038,21 +2062,24 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 2rem;
+      padding: 1.5rem;
     }
 
     .details-image img {
       max-width: 100%;
-      max-height: 450px;
+      max-height: 380px;
       object-fit: contain;
       border-radius: 12px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     }
 
     .details-info {
-      padding: 2.5rem;
+      padding: 1.75rem;
       background: var(--surface);
       overflow-y: auto;
+    }
+
+    .details-section {
+      margin-bottom: 1.25rem;
     }
 
     @media (max-width: 768px) {
@@ -2061,18 +2088,29 @@
       }
 
       .details-image {
-        padding: 1rem;
-        height: 300px;
+        padding: 0.75rem;
+        height: 240px;
       }
 
       .details-image img {
-        max-height: 260px;
+        max-height: 220px;
       }
 
       .details-info {
-        padding: 1.5rem;
+        padding: 1.25rem;
+      }
+
+      #product-modal .modal {
+        max-width: 92% !important;
+        max-height: 85vh !important;
       }
     }
+
+    body.modal-open {
+      overflow: hidden;
+      height: 100vh;
+    }
+
 
     .product-cell {
       display: flex;
@@ -2526,6 +2564,14 @@
         display: none
       }
 
+      .mobile-back-btn {
+        display: block !important;
+      }
+
+      .admin-back-btn-top {
+        display: none !important;
+      }
+
       .admin-main {
         padding: 1.25rem
       }
@@ -2720,6 +2766,11 @@
                 <p data-i18n="featIdentityDesc">نؤمن أن بيئة العمل المريحة والمميزة تساهم في زيادة الإنتاجية وتعكس هوية
                   المكان.</p>
               </div>
+              <div class="about-feature-item" style="grid-column: 1 / -1">
+                <h4 data-i18n="featWarranty">ضمان ما بعد البيع</h4>
+                <p data-i18n="featWarrantyDesc">نحن ملتزمون بجودة منتجاتنا، ونوفر ضماناً حقيقياً وخدمة صيانة ومتابعة بعد
+                  البيع لضمان رضاكم الدائم.</p>
+              </div>
             </div>
           </div>
           <div class="about-image animate-in" style="animation-delay: 0.2s">
@@ -2892,7 +2943,7 @@
           </div>
         </div>
         <div class="footer-bottom">
-          <p>© 2026 ModSeat Cairo. Designed by Antigravity Protocol</p>
+          <p>© 2026 ModSeat Cairo. تم التصميم والتطوير بواسطة المهندس أحمد عمرو أبوالحاج 01001352771</p>
           <div class="social-links">
             <a href="https://www.facebook.com/share/18jfD1GzAX/" target="_blank" class="social-link">
               <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -2960,15 +3011,28 @@
       <main class="admin-main">
         <div class="admin-header">
           <div>
-            <h2>إدارة الموديلات والمخزون</h2>
+            <div style="display:flex;align-items:center;gap:0.5rem">
+              <button class="mobile-back-btn" onclick="showStore()"
+                style="display:none;background:none;border:none;padding:0;color:var(--text);cursor:pointer">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m7-7l-7 7 7 7" />
+                </svg>
+              </button>
+              <h2>إدارة الموديلات والمخزون</h2>
+            </div>
             <p>يمكنك تحديث الأسعار وإضافة موديلات جديدة من هنا</p>
           </div>
-          <button class="btn-primary" onclick="openAddProductModal()">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-            </svg>
-            إضافة موديل جديد
-          </button>
+          <div style="display:flex;gap:0.5rem">
+            <button class="btn-secondary admin-back-btn-top" onclick="showStore()">
+              العودة للمتجر
+            </button>
+            <button class="btn-primary" onclick="openAddProductModal()">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              إضافة موديل
+            </button>
+          </div>
         </div>
 
         <div id="admin-products-tab">
@@ -3204,9 +3268,11 @@
           <div class="order-summary" id="order-summary"></div>
           <div class="form-group"><label>طريقة الدفع</label>
             <select id="c-payment">
-              <option value="cash">كاش عند الاستلام</option>
-              <option value="transfer">تحويل بنكي</option>
-              <option value="vodafone">فودافون كاش</option>
+              <option value="cash">ديبوزت (عربون) - الباقي عند الاستلام</option>
+              <option value="instapay">InstaPay</option>
+              <option value="vodafone">فودافون كاش (Vodafone Cash)</option>
+              <option value="etisalat">اتصالات كاش (Etisalat Cash)</option>
+              <option value="transfer">تحويل بنكي (Bank Transfer)</option>
             </select>
           </div>
           <div class="modal-actions">
@@ -3262,6 +3328,21 @@
           </div>
 
           <div id="details-selected-badge" class="selected-opts-badge" style="margin:1.5rem 0; display:none"></div>
+
+          <div
+            style="background:rgba(13, 148, 136, 0.05); padding:1rem; border-radius:12px; border:1px solid rgba(13, 148, 136, 0.1); margin-bottom:1.5rem">
+            <div
+              style="display:flex; align-items:center; gap:8px; color:var(--primary); font-weight:800; font-size:0.9rem">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              <span data-i18n="featWarranty">ضمان ما بعد البيع</span>
+            </div>
+            <p style="font-size:0.78rem; color:var(--muted); margin-top:4px; line-height:1.4"
+              data-i18n="featWarrantyDesc">نحن ملتزمون بجودة منتجاتنا، ونوفر ضماناً حقيقياً وخدمة صيانة ومتابعة بعد
+              البيع لضمان رضاكم الدائم.</p>
+          </div>
 
           <div style="margin-top:2rem">
             <div id="details-cart-action"></div>
@@ -3642,6 +3723,8 @@
         featQualityDesc: "نعتمد على خشب MDF المستورد من تايلاند لضمان متانة وتشطيب احترافي يواكب أحدث الاتجاهات العصرية.",
         featIdentity: "هوية المكان",
         featIdentityDesc: "نؤمن أن بيئة العمل المريحة والمميزة تساهم في زيادة الإنتاجية وتعكس هوية المكان.",
+        featWarranty: "ضمان ما بعد البيع",
+        featWarrantyDesc: "نحن ملتزمون بجودة منتجاتنا، ونوفر ضماناً حقيقياً وخدمة صيانة ومتابعة بعد البيع لضمان رضاكم الدائم.",
         foundedDate: "يونيو 2025",
         foundedLabel: "تاريخ التأسيس",
         about: "من نحن"
@@ -3717,6 +3800,8 @@
         featQualityDesc: "We use imported MDF from Thailand to ensure durability and professional finishing keeping pace with latest trends.",
         featIdentity: "Workplace Identity",
         featIdentityDesc: "We believe a comfortable and distinctive work environment boosts productivity and reflects the place's identity.",
+        featWarranty: "After-Sales Warranty",
+        featWarrantyDesc: "We are committed to quality, providing real warranty, maintenance, and follow-up after sales to ensure your lasting satisfaction.",
         foundedDate: "June 2025",
         foundedLabel: "Founded Date",
         about: "About Us"
@@ -3787,8 +3872,13 @@
         const colors = p.colors || [];
         const colSwatches = colors.map((c, ci) => {
           const hex = typeof c === 'object' ? c.hex : c;
-          const cname = typeof c === 'object' ? c.name : c;
-          return `<div class="color-swatch" style="background:${hex}" title="${cname}" data-color-hex="${hex}" data-color-name="${cname}" onclick="selectColor(${p.id}, ${ci}, this)"></div>`;
+          const cname = typeof c === 'object' ? c.name : (currentLang === 'ar' ? 'لون' : 'Color');
+          return `
+            <div class="color-option" onclick="selectColor(${p.id}, ${ci}, this)">
+              <div class="color-swatch" style="background:${hex}"></div>
+              <span class="color-name">${cname}</span>
+            </div>
+          `;
         }).join('');
 
         // Size selector
@@ -3858,7 +3948,13 @@
         document.getElementById('details-colors-section').style.display = 'block';
         colorsDiv.innerHTML = p.colors.map((c, ci) => {
           const hex = typeof c === 'object' ? c.hex : c;
-          return `<div class="color-swatch" style="background:${hex}" onclick="selectColorInDetails(${p.id}, ${ci}, this)"></div>`;
+          const cname = typeof c === 'object' ? c.name : (currentLang === 'ar' ? 'لون' : 'Color');
+          return `
+            <div class="color-option" onclick="selectColorInDetails(${p.id}, ${ci}, this)">
+              <div class="color-swatch" style="background:${hex}"></div>
+              <span class="color-name">${cname}</span>
+            </div>
+          `;
         }).join('');
       } else {
         document.getElementById('details-colors-section').style.display = 'none';
@@ -3885,6 +3981,7 @@
         `<button class="add-cart-btn" style="width:100%" onclick="addToCart(${p.id}); openProductDetails(${p.id})">${t('addToCart')}</button>`;
 
       document.getElementById('product-modal').classList.add('open');
+      document.body.classList.add('modal-open');
     }
 
     function selectColorInDetails(pid, idx, el) {
@@ -3895,7 +3992,7 @@
       if (img) document.getElementById('details-img').src = img;
 
       const parent = document.getElementById('details-colors-list');
-      parent.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+      parent.querySelectorAll('.color-option').forEach(s => s.classList.remove('selected'));
       el.classList.add('selected');
 
       selectColor(pid, idx, el); // Sync with card logic
@@ -3911,6 +4008,7 @@
 
     function closeProductModal() {
       document.getElementById('product-modal').classList.remove('open');
+      document.body.classList.remove('modal-open');
     }
 
     function selectColor(pid, idx, el) {
@@ -3923,8 +4021,10 @@
 
       // Highlight swatch
       const parent = document.getElementById(`colors-${pid}`);
-      parent.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
-      el.classList.add('selected');
+      if (parent) {
+        parent.querySelectorAll('.color-option').forEach(s => s.classList.remove('selected'));
+        el.classList.add('selected');
+      }
 
       // Change image
       if (img) {
@@ -4184,13 +4284,21 @@
         return line;
       }).join('\n\n');
 
+      const paymentLabels = {
+        cash: 'ديبوزت (عربون) - الباقي عند الاستلام',
+        instapay: 'InstaPay',
+        vodafone: 'فودافون كاش (Vodafone Cash)',
+        etisalat: 'اتصالات كاش (Etisalat Cash)',
+        transfer: 'تحويل بنكي (Bank Transfer)'
+      };
+
       const message = `طلب جديد: ${order.id}\n\n` +
         `👤 العميل: ${order.name}\n` +
         `📞 هاتف 1: ${order.phone}\n` +
         `📞 هاتف 2: ${order.phone2}\n` +
         `📍 المحافظة: ${order.gov}\n` +
         `🏠 العنوان: ${order.address}\n` +
-        `💰 الدفع: ${order.payment === 'cash' ? 'كاش عند الاستلام' : order.payment}\n\n` +
+        `💰 الدفع: ${paymentLabels[order.payment] || order.payment}\n\n` +
         `📦 المنتجات:\n${itemLines}\n\n` +
         `💵 الإجمالي: ${order.total.toLocaleString('ar-EG')} ج.م`;
 
