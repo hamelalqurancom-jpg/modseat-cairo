@@ -1,0 +1,3607 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ModSeat Cairo — أثاث مكتبي متكامل</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Cairo+Play:wght@400;600;700;900&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --primary: #14b8a6;
+      --primary-light: #f0fdfa;
+      --primary-dark: #0d9488;
+      --accent: #f59e0b;
+      --bg: #fafaf9;
+      --surface: rgba(255, 255, 255, 0.85);
+      --border: rgba(0, 0, 0, 0.05);
+      --text: #0f172a;
+      --muted: #64748b;
+      --radius: 20px;
+      --radius-lg: 32px;
+      --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 20px 50px -12px rgba(0, 0, 0, 0.15);
+      --glass-bg: rgba(255, 255, 255, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.4);
+    }
+
+    html,
+    body {
+      overflow-x: hidden;
+      width: 100%;
+      position: relative;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ===== MODERN DYNAMIC BACKGROUND ===== */
+    .bg-mesh {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: #f8fafc;
+      overflow: hidden;
+    }
+
+    .bg-mesh::before,
+    .bg-mesh::after,
+    .bg-blob {
+      content: '';
+      position: absolute;
+      width: 60vw;
+      height: 60vw;
+      border-radius: 50%;
+      filter: blur(80px);
+      z-index: -1;
+      opacity: 0.4;
+      animation: blob-float 25s infinite alternate;
+    }
+
+    .bg-mesh::before {
+      top: -10%;
+      left: -10%;
+      background: radial-gradient(circle, #ccfbf1 0%, transparent 70%);
+      animation-duration: 30s;
+    }
+
+    .bg-mesh::after {
+      bottom: -10%;
+      right: -10%;
+      background: radial-gradient(circle, #e0f2fe 0%, transparent 70%);
+      animation-duration: 35s;
+      animation-delay: -5s;
+    }
+
+    .bg-blob-1 {
+      top: 20%;
+      right: 10%;
+      width: 45vw;
+      height: 45vw;
+      background: radial-gradient(circle, #f0fdfa 0%, transparent 70%);
+      animation: blob-float 40s infinite alternate;
+      animation-delay: -10s;
+    }
+
+    .bg-blob-2 {
+      bottom: 20%;
+      left: 10%;
+      width: 35vw;
+      height: 35vw;
+      background: radial-gradient(circle, #fdf4ff 0%, transparent 70%);
+      animation: blob-float 35s infinite alternate-reverse;
+      animation-delay: -15s;
+    }
+
+    @keyframes blob-float {
+      0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+      }
+
+      33% {
+        transform: translate(15%, 10%) scale(1.1) rotate(120deg);
+      }
+
+      66% {
+        transform: translate(-10%, 20%) scale(0.9) rotate(240deg);
+      }
+
+      100% {
+        transform: translate(0, 0) scale(1) rotate(360deg);
+      }
+    }
+
+    /* ===== SPLASH SCREEN ===== */
+    #splash-screen {
+      position: fixed;
+      inset: 0;
+      background: #0f172a;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      transition: all 1s cubic-bezier(0.8, 0, 0.2, 1);
+    }
+
+    #splash-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(1.1);
+    }
+
+    .splash-content {
+      text-align: center;
+      animation: splash-appear 1.2s ease-out forwards;
+    }
+
+    @keyframes splash-appear {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .splash-logo {
+      font-size: 4.5rem;
+      font-weight: 900;
+      letter-spacing: -3px;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #2dd4bf, #0ea5e9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 30px rgba(45, 212, 191, 0.3));
+    }
+
+    .splash-tagline {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 600;
+      margin-bottom: 3rem;
+      letter-spacing: 2px;
+    }
+
+    .splash-loader {
+      width: 240px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      margin: 0 auto;
+      /* Fix centering */
+    }
+
+    .splash-progress {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #2dd4bf, #0ea5e9);
+      animation: progress 2.5s ease-in-out forwards;
+    }
+
+    @keyframes progress {
+      0% {
+        width: 0%;
+      }
+
+      50% {
+        width: 70%;
+      }
+
+      100% {
+        width: 100%;
+      }
+    }
+
+    /* ===== REFINED GLASS CLASSES ===== */
+    .glass {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow);
+    }
+
+    /* ===== NAVBAR ===== */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 0 2rem;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text)
+    }
+
+    .logo-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 900;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      font-size: 1.3rem;
+      font-weight: 900;
+      letter-spacing: -0.5px
+    }
+
+    .logo-text span {
+      color: var(--primary)
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: .9rem;
+      transition: color .2s
+    }
+
+    .nav-links a:hover {
+      color: var(--primary)
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .cart-btn {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      background: var(--surface);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .2s;
+      color: var(--text);
+    }
+
+    .cart-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary)
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      font-size: .65rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      display: none;
+    }
+
+    .cart-count.show {
+      display: flex
+    }
+
+    .admin-btn {
+      padding: 10px 18px;
+      border-radius: 12px;
+      background: var(--text);
+      color: #fff;
+      font-weight: 700;
+      font-size: .85rem;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all .2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .admin-btn:hover {
+      background: var(--primary)
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(13, 148, 136, .08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      border-radius: 100px;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      font-weight: 700;
+      font-size: .85rem;
+      margin-bottom: 2rem;
+      border: 1px solid rgba(13, 148, 136, .2);
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      animation: pulse 2s infinite
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .4
+      }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 8vw, 6rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -3px;
+      margin-bottom: 2rem;
+      max-width: 1000px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--primary), #0ea5e9);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--muted);
+      max-width: 650px;
+      line-height: 1.6;
+      margin-bottom: 3rem;
+      font-weight: 600
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center
+    }
+
+    .btn-primary {
+      padding: 18px 40px;
+      border-radius: 18px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 800;
+      font-size: 1.1rem;
+      font-family: 'Cairo', sans-serif;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 40px -10px rgba(20, 184, 166, 0.5);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 0 15px 50px -12px rgba(20, 184, 166, 0.6);
+    }
+
+    .btn-secondary {
+      padding: 16px 32px;
+      border-radius: 14px;
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 900;
+      font-size: 1rem;
+      font-family: 'Cairo', sans-serif;
+      border: 2px solid var(--border);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all .25s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-2px)
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 4rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .hero-stat {
+      text-align: center
+    }
+
+    .hero-stat strong {
+      display: block;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--primary)
+    }
+
+    .hero-stat span {
+      font-size: .85rem;
+      color: var(--muted);
+      font-weight: 600
+    }
+
+    /* ===== SECTION ===== */
+    section {
+      padding: 5rem 1.5rem
+    }
+
+    @media (max-width: 480px) {
+      section {
+        padding: 3rem 1rem;
+      }
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto
+    }
+
+    .section-head {
+      text-align: center;
+      margin-bottom: 3rem
+    }
+
+    .section-head h2 {
+      font-size: 2.2rem;
+      font-weight: 900;
+      margin-bottom: .5rem;
+      letter-spacing: -1px
+    }
+
+    .section-head p {
+      color: var(--muted);
+      font-weight: 600
+    }
+
+    /* ===== FILTERS ===== */
+    .filters-wrap {
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 2.5rem;
+      border: 1px solid var(--glass-border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: var(--shadow);
+    }
+
+    .filter-group {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+      align-items: center
+    }
+
+    .filter-label {
+      font-weight: 700;
+      font-size: .85rem;
+      color: var(--muted);
+      padding: 8px 16px;
+      background: var(--bg);
+      border-radius: 10px;
+      white-space: nowrap
+    }
+
+    .filter-btn {
+      padding: 8px 18px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-weight: 700;
+      font-size: .85rem;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary)
+    }
+
+    .search-input {
+      padding: 10px 18px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      font-family: 'Cairo', sans-serif;
+      font-size: .9rem;
+      font-weight: 600;
+      outline: none;
+      transition: all .2s;
+      min-width: 200px;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      background: var(--surface);
+      box-shadow: 0 0 0 4px rgba(13, 148, 136, .1)
+    }
+
+    /* ===== PRODUCTS GRID ===== */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .product-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--glass-border);
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      box-shadow: var(--shadow);
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: rgba(13, 148, 136, .3)
+    }
+
+    .product-img {
+      position: relative;
+      height: 220px;
+      overflow: hidden;
+      background: #f3f4f6;
+    }
+
+    .product-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .5s
+    }
+
+    .product-card:hover .product-img img {
+      transform: scale(1.07)
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      padding: 5px 14px;
+      border-radius: 100px;
+      background: rgba(255, 255, 255, .92);
+      backdrop-filter: blur(8px);
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--primary);
+      border: 1px solid rgba(13, 148, 136, .2);
+    }
+
+    .product-body {
+      padding: 1.25rem
+    }
+
+    .product-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      gap: .5rem
+    }
+
+    .product-name {
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.4;
+      color: var(--text)
+    }
+
+    .product-price {
+      font-size: 1.15rem;
+      font-weight: 900;
+      color: var(--primary);
+      white-space: nowrap
+    }
+
+    .product-specs {
+      list-style: none;
+      margin-bottom: 1rem
+    }
+
+    .product-specs li {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: .82rem;
+    }
+
+    .product-specs li:last-child {
+      border-bottom: none
+    }
+
+    .spec-key {
+      color: var(--muted);
+      font-weight: 600
+    }
+
+    .spec-val {
+      color: var(--text);
+      font-weight: 700;
+      text-align: left
+    }
+
+    .product-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      gap: .75rem;
+    }
+
+    .colors-row {
+      display: flex;
+      gap: 6px;
+      align-items: center
+    }
+
+    .color-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, .8);
+      box-shadow: 0 0 0 1.5px var(--border);
+      cursor: pointer;
+      transition: transform .2s;
+    }
+
+    .color-dot:hover {
+      transform: scale(1.3)
+    }
+
+    .cart-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg);
+      padding: 4px 8px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .add-cart-btn {
+      padding: 10px 20px;
+      border-radius: 12px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 700;
+      font-size: .85rem;
+      font-family: 'Cairo', sans-serif;
+      border: none;
+      cursor: pointer;
+      transition: all .2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .add-cart-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px)
+    }
+
+    /* ===== CART DRAWER ===== */
+    .cart-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .5);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s;
+    }
+
+    .cart-overlay.open {
+      opacity: 1;
+      pointer-events: all
+    }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: min(480px, 100%);
+      background: var(--surface);
+      z-index: 201;
+      transform: translateX(-100%);
+      transition: transform .35s cubic-bezier(.4, 0, .2, 1);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 8px 0 40px rgba(0, 0, 0, .15);
+    }
+
+    .cart-drawer.open {
+      transform: translateX(0)
+    }
+
+    .cart-head {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-head h3 {
+      font-size: 1.25rem;
+      font-weight: 900
+    }
+
+    .close-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all .2s;
+      color: var(--text);
+    }
+
+    .close-btn:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary)
+    }
+
+    .cart-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem
+    }
+
+    .cart-empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .cart-empty svg {
+      opacity: .3
+    }
+
+    .cart-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--bg);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .cart-item-img {
+      width: 72px;
+      height: 72px;
+      border-radius: 10px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .cart-item-info {
+      flex: 1;
+      min-width: 0
+    }
+
+    .cart-item-name {
+      font-weight: 700;
+      font-size: .9rem;
+      margin-bottom: .25rem
+    }
+
+    .cart-item-price {
+      color: var(--primary);
+      font-weight: 900;
+      font-size: .95rem
+    }
+
+    .cart-item-actions {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      margin-top: .5rem
+    }
+
+    .qty-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .2s;
+      color: var(--text);
+    }
+
+    .qty-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary)
+    }
+
+    .qty-val {
+      font-weight: 700;
+      min-width: 24px;
+      text-align: center;
+      font-size: .9rem
+    }
+
+    .remove-btn {
+      margin-right: auto;
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: 1.5px solid #fee2e2;
+      background: #fff5f5;
+      color: #ef4444;
+      font-size: .75rem;
+      font-weight: 700;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .remove-btn:hover {
+      background: #ef4444;
+      color: #fff;
+      border-color: #ef4444
+    }
+
+    .cart-foot {
+      padding: 1.5rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .cart-total span {
+      font-weight: 600;
+      color: var(--muted)
+    }
+
+    .cart-total strong {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: var(--primary)
+    }
+
+    .checkout-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 14px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 900;
+      font-size: 1rem;
+      font-family: 'Cairo', sans-serif;
+      border: none;
+      cursor: pointer;
+      transition: all .25s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .checkout-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(13, 148, 136, .35)
+    }
+
+    /* ===== CHECKOUT MODAL ===== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .6);
+      z-index: 300;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 640px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: scale(.95) translateY(20px);
+      transition: transform .3s;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .modal-overlay.open .modal {
+      transform: scale(1) translateY(0)
+    }
+
+    .modal-head {
+      padding: 1.75rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: var(--surface);
+      z-index: 1;
+    }
+
+    .modal-head h3 {
+      font-size: 1.3rem;
+      font-weight: 900
+    }
+
+    .steps-bar {
+      display: flex;
+      padding: 1.5rem 2rem;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .step-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .5rem;
+      position: relative;
+    }
+
+    .step-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--border);
+      z-index: 0;
+    }
+
+    .step-item.done::after,
+    .step-item.active::after {
+      background: var(--primary)
+    }
+
+    .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: .85rem;
+      z-index: 1;
+      transition: all .3s;
+    }
+
+    .step-item.active .step-num {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: #fff
+    }
+
+    .step-item.done .step-num {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: #fff
+    }
+
+    .step-label {
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-align: center
+    }
+
+    .step-item.active .step-label {
+      color: var(--primary)
+    }
+
+    .modal-body {
+      padding: 2rem
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+      margin-bottom: 1.25rem
+    }
+
+    .form-group label {
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--text)
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      font-family: 'Cairo', sans-serif;
+      font-size: .9rem;
+      font-weight: 600;
+      outline: none;
+      transition: all .2s;
+      color: var(--text);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--primary);
+      background: var(--surface);
+      box-shadow: 0 0 0 4px rgba(13, 148, 136, .1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 90px
+    }
+
+    .order-summary {
+      background: var(--bg);
+      border-radius: 14px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+    }
+
+    .order-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      font-size: .9rem;
+    }
+
+    .order-row.total {
+      border-top: 1px solid var(--border);
+      margin-top: .5rem;
+      padding-top: 1rem;
+      font-weight: 900;
+      font-size: 1.05rem;
+      color: var(--primary);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      justify-content: flex-end;
+    }
+
+    .btn-back {
+      padding: 12px 24px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      font-weight: 700;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      color: var(--text);
+      transition: all .2s;
+    }
+
+    .btn-back:hover {
+      border-color: var(--primary);
+      color: var(--primary)
+    }
+
+    .btn-next {
+      padding: 12px 28px;
+      border-radius: 12px;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 900;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      border: none;
+      transition: all .25s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-next:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px)
+    }
+
+    .success-box {
+      text-align: center;
+      padding: 2rem 0
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      margin: 0 auto 1.5rem;
+    }
+
+    .success-box h4 {
+      font-size: 1.4rem;
+      font-weight: 900;
+      margin-bottom: .75rem
+    }
+
+    .success-box p {
+      color: var(--muted);
+      font-weight: 600;
+      line-height: 1.8;
+      max-width: 400px;
+      margin: 0 auto
+    }
+
+    .order-number {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 10px 24px;
+      border-radius: 100px;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      font-weight: 900;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+    }
+
+    /* ===== LOGISTICS SECTION ===== */
+    .logistics-section {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-radius: var(--radius-lg);
+      padding: 4rem;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logistics-section::before {
+      content: '';
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .05);
+      top: -150px;
+      left: -150px;
+    }
+
+    .logistics-section::after {
+      content: '';
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .05);
+      bottom: -100px;
+      right: -100px;
+    }
+
+    .logistics-inner {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .logistics-info h3 {
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      line-height: 1.3
+    }
+
+    .logistics-info p {
+      opacity: .85;
+      line-height: 1.8;
+      font-size: 1rem;
+      margin-bottom: 2rem
+    }
+
+    .logistics-features {
+      display: flex;
+      flex-direction: column;
+      gap: .75rem
+    }
+
+    .logistics-feature {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      background: rgba(255, 255, 255, .1);
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    .logistics-feature svg {
+      flex-shrink: 0;
+      opacity: .8
+    }
+
+    .logistics-form {
+      background: #fff;
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      color: var(--text);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
+    }
+
+    .logistics-form h4 {
+      font-size: 1.2rem;
+      font-weight: 900;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem
+    }
+
+    /* ABOUT SECTION */
+    .about-section {
+      padding: 6rem 0;
+      background: radial-gradient(circle at 10% 20%, rgba(13, 148, 136, 0.05) 0%, transparent 40%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .about-text h2 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+
+    .about-text h2 span {
+      color: var(--primary);
+    }
+
+    .about-text p {
+      font-size: 1.15rem;
+      line-height: 1.8;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .about-features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    .about-feature-item {
+      padding: 1.5rem;
+      background: var(--surface);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      transition: all 0.3s;
+    }
+
+    .about-feature-item:hover {
+      transform: translateY(-5px);
+      border-color: var(--primary);
+      box-shadow: 0 10px 30px rgba(13, 148, 136, 0.1);
+    }
+
+    .about-feature-item h4 {
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .about-feature-item p {
+      font-size: 0.95rem;
+      margin-bottom: 0;
+      line-height: 1.6;
+    }
+
+    .about-image {
+      position: relative;
+      border-radius: 40px;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+      aspect-ratio: 4/3;
+    }
+
+    .about-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .about-badge {
+      position: absolute;
+      bottom: 2.5rem;
+      right: 2.5rem;
+      background: var(--primary);
+      color: #fff;
+      padding: 1.8rem 2.2rem;
+      border-radius: 24px;
+      text-align: center;
+      box-shadow: 0 15px 35px rgba(13, 148, 136, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    .about-badge strong {
+      display: block;
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 2px;
+    }
+
+    .about-badge span {
+      font-size: 0.85rem;
+      font-weight: 600;
+      opacity: 0.9;
+    }
+
+    @media (max-width: 992px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 3.5rem;
+      }
+
+      .about-text h2 {
+        font-size: 2.2rem;
+      }
+
+      .about-features {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ===== ADMIN PANEL ===== */
+    #admin-panel {
+      display: none
+    }
+
+    #admin-panel.show {
+      display: flex
+    }
+
+    .admin-wrap {
+      min-height: 100vh;
+      background: var(--bg);
+      display: flex;
+      width: 100%;
+    }
+
+    .admin-sidebar {
+      width: 260px;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      padding: 2rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+
+    .admin-sidebar .logo {
+      margin-bottom: 1.5rem;
+      padding: .5rem .5rem 1.5rem;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .admin-nav-item {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: .9rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .2s;
+      background: none;
+      border: none;
+      text-align: right;
+      width: 100%;
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .admin-nav-item:hover {
+      background: var(--bg);
+      color: var(--text)
+    }
+
+    .admin-nav-item.active {
+      background: rgba(13, 148, 136, .1);
+      color: var(--primary)
+    }
+
+    .admin-main {
+      flex: 1;
+      padding: 2.5rem;
+      overflow-x: auto
+    }
+
+    .admin-header {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .admin-header h2 {
+      font-size: 1.5rem;
+      font-weight: 900
+    }
+
+    .admin-header p {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: .9rem;
+      margin-top: .25rem
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .stat-num {
+      font-size: 1.5rem;
+      font-weight: 900
+    }
+
+    .stat-label {
+      font-size: .8rem;
+      color: var(--muted);
+      font-weight: 600
+    }
+
+    .admin-table-wrap {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .admin-table-head {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      background: var(--bg);
+    }
+
+    .admin-table-head h3 {
+      font-size: 1rem;
+      font-weight: 900
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    thead tr {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border)
+    }
+
+    th {
+      padding: 12px 16px;
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-align: right;
+      white-space: nowrap
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: .875rem;
+      vertical-align: middle
+    }
+
+    tr:last-child td {
+      border-bottom: none
+    }
+
+    tr:hover td {
+      background: rgba(13, 148, 136, .02)
+    }
+
+    .product-cell {
+      display: flex;
+      align-items: center;
+      gap: .75rem
+    }
+
+    .product-cell img {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 1px solid var(--border)
+    }
+
+    .category-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--muted);
+      font-size: .75rem;
+      font-weight: 700;
+      border: 1px solid var(--border);
+    }
+
+    .price-input {
+      width: 100px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      font-family: 'Cairo', sans-serif;
+      font-weight: 700;
+      font-size: .875rem;
+      outline: none;
+      color: var(--text);
+      transition: all .2s;
+    }
+
+    .price-input:focus {
+      border-color: var(--primary);
+      background: var(--surface)
+    }
+
+    .table-actions {
+      display: flex;
+      gap: .5rem
+    }
+
+    .btn-update {
+      padding: 7px 14px;
+      border-radius: 9px;
+      background: #ecfdf5;
+      color: #059669;
+      border: 1.5px solid #a7f3d0;
+      font-weight: 700;
+      font-size: .78rem;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+
+    .btn-update:hover {
+      background: #059669;
+      color: #fff;
+      border-color: #059669
+    }
+
+    .btn-delete {
+      padding: 7px 14px;
+      border-radius: 9px;
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1.5px solid #fecaca;
+      font-weight: 700;
+      font-size: .78rem;
+      font-family: 'Cairo', sans-serif;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+
+    .btn-delete:hover {
+      background: #dc2626;
+      color: #fff;
+      border-color: #dc2626
+    }
+
+    /* ===== ADD PRODUCT MODAL ===== */
+    .product-type-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .75rem;
+      margin-bottom: 1.5rem
+    }
+
+    .type-btn {
+      padding: 12px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      background: var(--bg);
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 700;
+      font-size: .85rem;
+      color: var(--muted);
+    }
+
+    .type-btn:hover,
+    .type-btn.selected {
+      border-color: var(--primary);
+      background: rgba(13, 148, 136, .05);
+      color: var(--primary)
+    }
+
+    .type-btn span {
+      display: block;
+      font-size: 1.5rem;
+      margin-bottom: .25rem
+    }
+
+    /* ===== TOAST ===== */
+    .toast-wrap {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 500;
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+      pointer-events: none
+    }
+
+    .toast {
+      padding: 14px 24px;
+      border-radius: 14px;
+      background: var(--text);
+      color: #fff;
+      font-weight: 700;
+      font-size: .9rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all .3s;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .2);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    .toast.success {
+      background: var(--primary)
+    }
+
+    .toast.error {
+      background: #ef4444
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--text);
+      color: #fff;
+      padding: 4rem 2rem 2rem
+    }
+
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 3rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid rgba(255, 255, 255, .1);
+      margin-bottom: 2rem;
+    }
+
+    .footer-logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      margin-bottom: .75rem
+    }
+
+    .footer-logo span {
+      color: var(--primary)
+    }
+
+    .footer-desc {
+      color: rgba(255, 255, 255, .5);
+      font-weight: 600;
+      line-height: 1.8;
+      font-size: .9rem
+    }
+
+    .footer-col h4 {
+      font-size: .9rem;
+      font-weight: 900;
+      margin-bottom: 1.25rem;
+      color: rgba(255, 255, 255, .7)
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: .75rem
+    }
+
+    .footer-col ul li a {
+      color: rgba(255, 255, 255, .4);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: .875rem;
+      transition: color .2s
+    }
+
+    .footer-col ul li a:hover {
+      color: var(--primary)
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap
+    }
+
+    .footer-bottom p {
+      color: rgba(255, 255, 255, .3);
+      font-size: .8rem;
+      font-weight: 600
+    }
+
+    .social-links {
+      display: flex;
+      gap: .75rem
+    }
+
+    .social-link {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid rgba(255, 255, 255, .1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, .4);
+      transition: all .2s;
+    }
+
+    .social-link:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary)
+    }
+
+    /* ===== UTILITIES ===== */
+    .hidden {
+      display: none
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0)
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .animate-in {
+      animation: fadeInUp .5s ease forwards
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media(max-width:768px) {
+      nav {
+        padding: 0 1rem;
+      }
+
+      .hero {
+        padding: 6rem 1rem 3rem;
+      }
+
+      .hero h1 {
+        font-size: 2.2rem;
+        letter-spacing: -1px
+      }
+
+      .hero-stats {
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding-top: 2rem;
+      }
+
+      .about-grid {
+        gap: 2.5rem;
+      }
+
+      .about-text h2 {
+        font-size: 1.8rem;
+      }
+
+      .about-badge {
+        bottom: 1rem;
+        right: 1rem;
+        padding: 1rem;
+      }
+
+      .about-badge strong {
+        font-size: 1.4rem;
+      }
+
+      .logistics-inner {
+        grid-template-columns: 1fr
+      }
+
+      .logistics-section {
+        padding: 2.5rem 1rem
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      footer {
+        padding: 3rem 1rem 1.5rem;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr
+      }
+
+      .stats-row {
+        grid-template-columns: 1fr
+      }
+
+      .nav-links {
+        display: none
+      }
+
+      .admin-sidebar {
+        display: none
+      }
+
+      .admin-main {
+        padding: 1.25rem
+      }
+
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-ctas {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+      }
+
+      .hero-stat {
+        flex: 1 1 40%;
+      }
+
+      .about-features {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== SPLASH SCREEN ===== -->
+  <div id="splash-screen">
+    <div class="splash-content">
+      <div class="splash-logo">ModSeat<span>Cairo</span></div>
+      <div class="splash-tagline">EXPERIENCE INNOVATION</div>
+      <div class="splash-loader">
+        <div class="splash-progress"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== BACKGROUND DECORATION ===== -->
+  <div class="bg-mesh">
+    <div class="bg-blob-1"></div>
+    <div class="bg-blob-2"></div>
+  </div>
+
+  <!-- ===== STORE ===== -->
+  <div id="store-view">
+
+    <!-- NAVBAR -->
+    <nav>
+      <a href="#" class="logo" onclick="showStore()">
+        <div class="logo-mark">M</div>
+        <span class="logo-text">ModSeat<span>Cairo</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#" onclick="showStore()" data-i18n="home">الرئيسية</a></li>
+        <li><a href="#about-section" data-i18n="about">من نحن</a></li>
+        <li><a href="#products-section" data-i18n="models">الموديلات</a></li>
+        <li><a href="#logistics-section" data-i18n="measurement">المعاينة</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="cart-btn" onclick="toggleLang()"
+          style="font-weight:900;width:auto;padding:0 10px;font-size:0.8rem">
+          AR / EN
+        </button>
+        <button class="cart-btn" onclick="openCart()" title="السلة">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          <span class="cart-count" id="cart-count">0</span>
+        </button>
+        <button class="admin-btn" onclick="showAdmin()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <span data-i18n="cockpit">Cockpit</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="hero-badge">
+        <span data-i18n="heroBadge">رواد الأثاث المكتبي المتكامل في مصر</span>
+      </div>
+      <h1 data-i18n="heroTitle">أثاث مبهج..<br />لبيئة عمل <span>مبتكرة</span></h1>
+      <p data-i18n="heroDesc">نوفر أحدث تصاميم المكاتب والكراسي وخلايا العمل لشركتك بلمسة عصرية وخامات معتمدة تعزز
+        إنتاجية فريقك.</p>
+      <div class="hero-ctas">
+        <a href="#products-section" class="btn-primary">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0l-4-4m4 4l-4 4" />
+          </svg>
+          <span data-i18n="viewModels">استعرض الموديلات</span>
+        </a>
+        <a href="#logistics-section" class="btn-secondary">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <span data-i18n="requestMeasurement">اطلب معاينة مجانية</span>
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><strong id="stat-models">10</strong><span data-i18n="statModels">موديل متاح</span></div>
+        <div class="hero-stat"><strong>+500</strong><span data-i18n="statClients">عميل راضٍ</span></div>
+        <div class="hero-stat"><strong>5</strong><span data-i18n="statGovs">محافظات</span></div>
+        <div class="hero-stat"><strong>٪100</strong><span data-i18n="statQuality">ضمان جودة</span></div>
+      </div>
+    </header>
+
+    <!-- ABOUT SECTION -->
+    <section id="about-section" class="about-section">
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-text animate-in">
+            <h2 data-i18n="aboutTitle">مرحبًا بكم في <span>ModSeat Cairo</span></h2>
+            <p data-i18n="aboutDesc1">وجهتكم المتخصصة في تصميم وتصنيع الأثاث المكتبي العصري بأعلى معايير الجودة
+              والاحترافية.</p>
+            <p data-i18n="aboutDesc2">نقدم حلولًا متكاملة للأثاث المكتبي تناسب الشركات، المكاتب، والمساحات الإدارية
+              الحديثة، مع التركيز على الجمع بين التصميم الأنيق، الراحة العملية، والمتانة طويلة الأمد. نعتمد في التصنيع
+              على خشب MDF المستورد من تايلاند لضمان جودة عالية وتشطيب احترافي يواكب أحدث الاتجاهات العصرية.</p>
+            <div class="about-features">
+              <div class="about-feature-item">
+                <h4 data-i18n="featQuality">جودة الخامات</h4>
+                <p data-i18n="featQualityDesc">نعتمد على خشب MDF المستورد من تايلاند لضمان متانة وتشطيب احترافي يواكب
+                  أحدث الاتجاهات العصرية.</p>
+              </div>
+              <div class="about-feature-item">
+                <h4 data-i18n="featIdentity">هوية المكان</h4>
+                <p data-i18n="featIdentityDesc">نؤمن أن بيئة العمل المريحة والمميزة تساهم في زيادة الإنتاجية وتعكس هوية
+                  المكان.</p>
+              </div>
+            </div>
+          </div>
+          <div class="about-image animate-in" style="animation-delay: 0.2s">
+            <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800"
+              alt="About ModSeat Cairo">
+            <div class="about-badge">
+              <strong data-i18n="foundedDate">يونيو 2025</strong>
+              <span data-i18n="foundedLabel">تاريخ التأسيس</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- PRODUCTS -->
+    <section id="products-section">
+      <div class="container">
+        <div class="section-head">
+          <h2 data-i18n="latestModels">أحدث الموديلات</h2>
+          <p data-i18n="latestModelsDesc">صُممت خصيصاً لراحة وإبداع فريقك</p>
+        </div>
+        <div class="filters-wrap">
+          <div class="filter-group">
+            <span class="filter-label" data-i18n="filterCat">التصنيف</span>
+            <button class="filter-btn active" onclick="applyFilter('all','',this)" data-i18n="filterAll">الكل</button>
+            <div id="cat-filters"></div>
+          </div>
+          <div class="filter-group">
+            <span class="filter-label" data-i18n="filterUse">الاستخدام</span>
+            <div id="use-filters"></div>
+          </div>
+          <input class="search-input" id="search-input" data-i18n="searchPlaceholder" placeholder="ابحث عن موديل..."
+            oninput="searchProducts(this.value)">
+        </div>
+        <div class="products-grid" id="products-grid"></div>
+      </div>
+    </section>
+
+    <!-- LOGISTICS -->
+    <section id="logistics-section">
+      <div class="container">
+        <div class="logistics-section">
+          <div class="logistics-inner">
+            <div class="logistics-info">
+              <h3 data-i18n="logisticsTitle">محرك التجهيزات المتكامل للمقرات الإدارية</h3>
+              <p data-i18n="logisticsDesc">بما أننا نصنع خلايا عمل متكاملة، نوفر خدمة المعاينة الميدانية ورفع المقاسات
+                لمقر شركتك لضمان استغلال
+                المساحات بأفضل شكل وبناء بيئة عمل هندسية دقيقة.</p>
+              <div class="logistics-features">
+                <div class="logistics-feature">
+                  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span data-i18n="featureDelivery">توصيل آمن وسريع لأي موقع</span>
+                </div>
+                <div class="logistics-feature">
+                  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4.657 3.879A3 3 0 016.464 3h11.072A3 3 0 0119.343 3.879L21 6H3l1.657-2.121z" />
+                  </svg>
+                  <span data-i18n="featureSpecs">مقايسات هندسية دقيقة للمساحة</span>
+                </div>
+                <div class="logistics-feature">
+                  <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  </svg>
+                  <span data-i18n="featureCoverage">تغطية: القاهرة، الجيزة، الإسكندرية وأكثر</span>
+                </div>
+              </div>
+            </div>
+            <div class="logistics-form">
+              <h4>
+                <svg width="22" height="22" fill="none" stroke="var(--primary)" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span data-i18n="requestFormTitle">طلب معاينة موقع مجاناً</span>
+              </h4>
+              <div class="form-group">
+                <label data-i18n="companyName">اسم الشركة / المؤسسة</label>
+                <input type="text" id="company-name" placeholder="شركة ..." required>
+              </div>
+              <div class="form-group">
+                <label data-i18n="companyPhone">رقم هاتف التواصل</label>
+                <input type="tel" id="company-phone" placeholder="01X XXXX XXXX" dir="ltr" required>
+              </div>
+              <div class="form-group">
+                <label data-i18n="province">المحافظة</label>
+                <select id="company-gov">
+                  <option value="" data-i18n="province">اختر المحافظة...</option>
+                  <option>القاهرة</option>
+                  <option>الجيزة</option>
+                  <option>القليوبية</option>
+                  <option>الإسكندرية</option>
+                  <option>الشرقية</option>
+                </select>
+              </div>
+              <button class="btn-primary" style="width:100%;justify-content:center" onclick="submitMeasurement()"
+                data-i18n="confirmBooking">
+                تأكيد الحجز المجاني
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-top">
+          <div>
+            <div class="footer-logo">ModSeat<span>Cairo</span></div>
+            <p class="footer-desc" data-i18n="footerDesc">أثاث يعكس هوية نجاحك. نصنع بيئات عمل متكاملة تعزز إنتاجية
+              فريقك بخامات معتمدة وتصاميم
+              عصرية.</p>
+          </div>
+          <div class="footer-col">
+            <h4 data-i18n="quickLinks">روابط سريعة</h4>
+            <ul>
+              <li><a href="#about-section" data-i18n="about">من نحن</a></li>
+              <li><a href="#products-section" data-i18n="models">الموديلات</a></li>
+              <li><a href="#logistics-section" data-i18n="measurement">المعاينة</a></li>
+              <li><a href="#" onclick="showAdmin()" data-i18n="cockpit">لوحة التحكم</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4 data-i18n="contactUs">تواصل معنا</h4>
+            <ul>
+              <li><a href="https://wa.me/201278255584" target="_blank">واتساب: 01278255584</a></li>
+              <li>
+                <span data-i18n="address" style="font-size:0.8rem;line-height:1.4;display:block;opacity:0.8">القاهرة،
+                  جسر السويس، بجوار محطة مترو النزهة، عمارة 1، الدور 1</span>
+                <a href="https://maps.app.goo.gl/iVXSQkvv2qZfgzE69" target="_blank" class="location-link"
+                  style="color:var(--primary);font-size:0.75rem;margin-top:4px;display:inline-block">
+                  <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                    style="vertical-align:middle;margin-left:4px">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span data-i18n="viewLocation">عرض الموقع على الخريطة</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2026 ModSeat Cairo. Designed by Antigravity Protocol</p>
+          <div class="social-links">
+            <a href="https://www.facebook.com/share/18jfD1GzAX/" target="_blank" class="social-link">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" />
+              </svg>
+            </a>
+            <a href="https://www.instagram.com/modeastcairo" target="_blank" class="social-link">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" />
+              </svg>
+            </a>
+            <a href="https://www.tiktok.com/@modeast.cairo.off" target="_blank" class="social-link">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 448 512">
+                <path
+                  d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ===== ADMIN PANEL ===== -->
+  <div id="admin-panel">
+    <div class="admin-wrap">
+      <aside class="admin-sidebar">
+        <div class="logo" style="margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)">
+          <div class="logo-mark" style="background:var(--text)">⚙</div>
+          <span class="logo-text" style="font-size:1.1rem">Cockpit</span>
+        </div>
+        <button class="admin-nav-item active" onclick="setAdminTab('products',this)">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg>
+          المنتجات
+        </button>
+        <button class="admin-nav-item" onclick="setAdminTab('orders',this)">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          الطلبات
+        </button>
+        <button class="admin-nav-item" onclick="setAdminTab('measurements',this)">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4.657 3.879A3 3 0 016.464 3h11.072A3 3 0 0119.343 3.879L21 6H3l1.657-2.121z" />
+          </svg>
+          طلبات المعاينة
+        </button>
+        <div style="margin-top:auto;padding-top:1.5rem;border-top:1px solid var(--border)">
+          <button class="admin-nav-item" onclick="showStore()" style="width:100%">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            العودة للمتجر
+          </button>
+        </div>
+      </aside>
+      <main class="admin-main">
+        <div class="admin-header">
+          <div>
+            <h2>إدارة الموديلات والمخزون</h2>
+            <p>يمكنك تحديث الأسعار وإضافة موديلات جديدة من هنا</p>
+          </div>
+          <button class="btn-primary" onclick="openAddProductModal()">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            إضافة موديل جديد
+          </button>
+        </div>
+
+        <div id="admin-products-tab">
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#eff6ff;color:#3b82f6">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+              </div>
+              <div>
+                <div class="stat-label">إجمالي الموديلات</div>
+                <div class="stat-num" id="admin-total-products">0</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#f0fdf4;color:#22c55e">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+              </div>
+              <div>
+                <div class="stat-label">طلبات معاينة</div>
+                <div class="stat-num" id="admin-total-requests">0</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#fdf4ff;color:#a855f7">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <div class="stat-label">إجمالي قيمة الكتالوج</div>
+                <div class="stat-num" id="admin-catalog-value">0</div>
+              </div>
+            </div>
+          </div>
+          <div class="admin-table-wrap">
+            <div class="admin-table-head">
+              <h3>جدول المنتجات النشطة</h3>
+              <input class="search-input" placeholder="بحث بالاسم أو الكود..." oninput="searchAdminProducts(this.value)"
+                style="min-width:180px">
+            </div>
+            <div style="overflow-x:auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th>الكود</th>
+                    <th>المنتج</th>
+                    <th>التصنيف</th>
+                    <th>السعر الحالي</th>
+                    <th>إجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="admin-orders-tab" style="display:none">
+          <div class="admin-table-wrap">
+            <div class="admin-table-head">
+              <h3>سجل الطلبات</h3>
+            </div>
+            <div style="overflow-x:auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th>رقم الطلب</th>
+                    <th>العميل</th>
+                    <th>المنتجات</th>
+                    <th>الإجمالي</th>
+                    <th>المحافظة</th>
+                    <th>التاريخ</th>
+                  </tr>
+                </thead>
+                <tbody id="orders-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="admin-measurements-tab" style="display:none">
+          <div class="admin-table-wrap">
+            <div class="admin-table-head">
+              <h3>طلبات المعاينة الميدانية</h3>
+            </div>
+            <div style="overflow-x:auto">
+              <table>
+                <thead>
+                  <tr>
+                    <th>الشركة / العميل</th>
+                    <th>رقم الهاتف</th>
+                    <th>المحافظة</th>
+                    <th>التاريخ</th>
+                  </tr>
+                </thead>
+                <tbody id="measurements-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ===== CART DRAWER ===== -->
+  <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-head">
+      <h3>سلة المشتريات</h3>
+      <button class="close-btn" onclick="closeCart()">✕</button>
+    </div>
+    <div class="cart-body" id="cart-body">
+      <div class="cart-empty" id="cart-empty">
+        <svg width="60" height="60" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        <p>السلة فارغة حتى الآن<br /><small>أضف منتجات لتبدأ</small></p>
+      </div>
+      <div id="cart-items-list"></div>
+    </div>
+    <div class="cart-foot" id="cart-foot" style="display:none">
+      <div class="cart-total">
+        <span>الإجمالي</span>
+        <strong id="cart-total-price">0 ج.م</strong>
+      </div>
+      <button class="checkout-btn" onclick="openCheckout()">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+        </svg>
+        إتمام الشراء
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== CHECKOUT MODAL ===== -->
+  <div class="modal-overlay" id="checkout-modal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>إتمام طلبك</h3>
+        <button class="close-btn" onclick="closeCheckout()">✕</button>
+      </div>
+      <div class="steps-bar">
+        <div class="step-item active" id="step-1">
+          <div class="step-num">1</div>
+          <div class="step-label">بيانات التواصل</div>
+        </div>
+        <div class="step-item" id="step-2">
+          <div class="step-num">2</div>
+          <div class="step-label">التوصيل</div>
+        </div>
+        <div class="step-item" id="step-3">
+          <div class="step-num">3</div>
+          <div class="step-label">المراجعة</div>
+        </div>
+      </div>
+      <div class="modal-body">
+        <!-- Step 1 -->
+        <div id="checkout-step-1">
+          <div class="form-row">
+            <div class="form-group"><label>الاسم الكامل</label><input type="text" id="c-name" placeholder="محمد أحمد">
+            </div>
+            <div class="form-group"><label>رقم الهاتف</label><input type="tel" id="c-phone" placeholder="01X XXXX XXXX"
+                dir="ltr"></div>
+          </div>
+          <div class="form-group"><label>البريد الإلكتروني (اختياري)</label><input type="email" id="c-email"
+              placeholder="example@email.com" dir="ltr"></div>
+          <div class="form-group"><label>اسم الشركة (اختياري)</label><input type="text" id="c-company"
+              placeholder="اسم الشركة أو المؤسسة"></div>
+          <div class="modal-actions">
+            <button class="btn-next" onclick="goStep(2)">التالي — التوصيل <svg width="16" height="16" fill="none"
+                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+              </svg></button>
+          </div>
+        </div>
+        <!-- Step 2 -->
+        <div id="checkout-step-2" style="display:none">
+          <div class="form-group"><label>المحافظة</label>
+            <select id="c-gov">
+              <option value="">اختر المحافظة</option>
+              <option>القاهرة</option>
+              <option>الجيزة</option>
+              <option>القليوبية</option>
+              <option>الإسكندرية</option>
+              <option>الشرقية</option>
+            </select>
+          </div>
+          <div class="form-group"><label>العنوان بالتفصيل</label><textarea id="c-address"
+              placeholder="الشارع، المنطقة، المبنى..."></textarea></div>
+          <div class="form-group"><label>ملاحظات إضافية (اختياري)</label><textarea id="c-notes"
+              placeholder="أي تفاصيل خاصة بالطلب..."></textarea></div>
+          <div class="modal-actions">
+            <button class="btn-back" onclick="goStep(1)">السابق</button>
+            <button class="btn-next" onclick="goStep(3)">التالي — المراجعة <svg width="16" height="16" fill="none"
+                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+              </svg></button>
+          </div>
+        </div>
+        <!-- Step 3 -->
+        <div id="checkout-step-3" style="display:none">
+          <div class="order-summary" id="order-summary"></div>
+          <div class="form-group"><label>طريقة الدفع</label>
+            <select id="c-payment">
+              <option value="cash">كاش عند الاستلام</option>
+              <option value="transfer">تحويل بنكي</option>
+              <option value="vodafone">فودافون كاش</option>
+            </select>
+          </div>
+          <div class="modal-actions">
+            <button class="btn-back" onclick="goStep(2)">السابق</button>
+            <button class="btn-next" onclick="confirmOrder()" style="background:#059669">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              تأكيد الطلب
+            </button>
+          </div>
+        </div>
+        <!-- Success -->
+        <div id="checkout-success" style="display:none">
+          <div class="success-box">
+            <div class="success-icon">✓</div>
+            <h4>تم تسجيل طلبك بنجاح!</h4>
+            <p>شكراً لثقتك في ModSeat Cairo. سيتواصل معك فريقنا خلال 24 ساعة لتأكيد الطلب وتحديد موعد التوصيل.</p>
+            <div class="order-number" id="order-number-display">MS-0001</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ADD PRODUCT MODAL ===== -->
+  <div class="modal-overlay" id="add-product-modal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>إضافة موديل جديد</h3>
+        <button class="close-btn" onclick="closeAddProduct()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-row">
+          <div class="form-group"><label>اسم المنتج</label><input type="text" id="np-name"
+              placeholder="مكتب مدير تنفيذي..."></div>
+          <div class="form-group"><label>السعر (ج.م)</label><input type="number" id="np-price" placeholder="8500"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>التصنيف</label>
+            <select id="np-category">
+              <option>مكاتب</option>
+              <option>كراسي</option>
+              <option>خلايا عمل</option>
+              <option>دواليب</option>
+              <option>كوانترات</option>
+              <option>أنتريهات</option>
+            </select>
+          </div>
+          <div class="form-group"><label>الاستخدام</label>
+            <select id="np-usage">
+              <option>أثاث للمديرين</option>
+              <option>أثاث للموظفين</option>
+              <option>أثاث انتظار</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>صورة المنتج</label>
+          <div style="display:flex;gap:10px;align-items:center">
+            <input type="file" id="np-image-file" accept="image/*" style="flex:1">
+            <input type="url" id="np-image-url" placeholder="أو رابط الصورة..." style="flex:1">
+          </div>
+          <div id="upload-status" style="font-size:0.8rem;margin-top:4px;color:var(--primary);display:none">جاري
+            الرفع...</div>
+        </div>
+        <div class="form-group"><label>المواصفات (مثال: الخشب: MDF إسباني، السماكة: 36مم)</label><textarea id="np-specs"
+            placeholder="الخشب: MDF إسباني&#10;السماكة: 36 مم&#10;الشاسيه: معدن"></textarea></div>
+        <div class="modal-actions">
+          <button class="btn-back" onclick="closeAddProduct()">إلغاء</button>
+          <button class="btn-next" onclick="addNewProduct()">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            إضافة المنتج
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast-wrap">
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <script>
+    // ===== DATA =====
+    // ===== DATA =====
+    let products = [
+      {
+        id: 1, name: "مكتب مدير تنفيذي مودرن", enName: "Modern Executive Manager Desk",
+        category: "مكاتب", enCategory: "Desks",
+        usage: "أثاث للمديرين", enUsage: "Manager Furniture",
+        price: 8500,
+        colors: ["#0d9488", "#d97706", "#000000"],
+        specs: { woodType: "MDF إسباني", thickness: "36 مم", chassis: "معدن" },
+        enSpecs: { woodType: "Spanish MDF", thickness: "36mm", chassis: "Metal" },
+        image: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        id: 2, name: "كرسي طبي هيدروليك", enName: "Hydraulic Medical Chair",
+        category: "كراسي", enCategory: "Chairs",
+        usage: "أثاث للموظفين", enUsage: "Employee Furniture",
+        price: 3200,
+        colors: ["#10b981", "#0d9488", "#222222"],
+        specs: { mechanism: "هيدروليك", upholstery: "شبك مريح (Mesh)", base: "نجمة خماسية معدن" },
+        enSpecs: { mechanism: "Hydraulic", upholstery: "Breathable Mesh", base: "5-Star Metal Base" },
+        image: "https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        id: 3, name: "خلية عمل 4 أفراد", enName: "4-Person Workstation",
+        category: "خلايا عمل", enCategory: "Workstations",
+        usage: "أثاث للموظفين", enUsage: "Employee Furniture",
+        price: 15000,
+        colors: ["#0d9488", "#f43f5e"],
+        specs: { woodType: "MDF مضاد للخدش", thickness: "24 مم", chassis: "معدن مع فواصل زجاجية" },
+        enSpecs: { woodType: "Anti-scratch MDF", thickness: "24mm", chassis: "Metal with Glass Dividers" },
+        image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        id: 4, name: "دولاب حفظ ملفات ذكي", enName: "Smart Filing Cabinet",
+        category: "دواليب", enCategory: "Cabinets",
+        usage: "أثاث للموظفين", enUsage: "Employee Furniture",
+        price: 4500,
+        colors: ["#ffffff", "#d97706"],
+        specs: { shelves: "4 أرفف", lock: "قفل مركزي ذكي", capacity: "حتى 200 ملف" },
+        enSpecs: { shelves: "4 Shelves", lock: "Smart Central Lock", capacity: "Up to 200 Files" },
+        image: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        id: 5, name: "كوانتر استقبال منحني", enName: "Curved Reception Counter",
+        category: "كوانترات", enCategory: "Counters",
+        usage: "أثاث انتظار", enUsage: "Waiting Furniture",
+        price: 12000,
+        colors: ["#f43f5e", "#10b981"],
+        specs: { dimensions: "240x120 سم", cladding: "أكريليك لامع مع إضاءة LED" },
+        enSpecs: { dimensions: "240x120 cm", cladding: "Glossy Acrylic with LED" },
+        image: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        id: 6, name: "أنتريه انتظار للضيوف", enName: "Guest Waiting Sofa Set",
+        category: "أنتريهات", enCategory: "Sofas",
+        usage: "أثاث انتظار", enUsage: "Waiting Furniture",
+        price: 18500,
+        colors: ["#d97706", "#0d9488"],
+        specs: { dimensions: "طقم 3 قطع", cladding: "جلد طبيعي عالي الجودة" },
+        enSpecs: { dimensions: "3-Piece Set", cladding: "High-Quality Genuine Leather" },
+        image: "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        id: 7, name: "مكتب مدير كلاسيك فخم", enName: "Luxury Classic Manager Desk",
+        category: "مكاتب", enCategory: "Desks",
+        usage: "أثاث للمديرين", enUsage: "Manager Furniture",
+        price: 14500,
+        colors: ["#4a2c2a", "#000000"],
+        specs: { woodType: "خشب زان طبيعي", thickness: "42 مم", chassis: "كلاسيك مطعم بالنحاس" },
+        enSpecs: { woodType: "Natural Beech Wood", thickness: "42mm", chassis: "Classic with Brass Inlays" },
+        image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        id: 8, name: "مكتب مدير زجاجي تكنو", enName: "Techno Glass Manager Desk",
+        category: "مكاتب", enCategory: "Desks",
+        usage: "أثاث للمديرين", enUsage: "Manager Furniture",
+        price: 9200,
+        colors: ["#94a3b8", "#000000"],
+        specs: { woodType: "زجاج سيكوريت 12مم", chassis: "ألومنيوم مقوى", dimensions: "200x90 سم" },
+        enSpecs: { woodType: "12mm Tempered Glass", chassis: "Reinforced Aluminum", dimensions: "200x90 cm" },
+        image: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        id: 9, name: "مكتب موظف L-Shape عصري", enName: "Modern L-Shape Employee Desk",
+        category: "مكاتب", enCategory: "Desks",
+        usage: "أثاث للموظفين", enUsage: "Employee Furniture",
+        price: 5800,
+        colors: ["#ffffff", "#0d9488", "#d97706"],
+        specs: { woodType: "MDF تايلاندي", thickness: "25 مم", chassis: "معدن حراري" },
+        enSpecs: { woodType: "Thai MDF", thickness: "25mm", chassis: "Thermal Metal" },
+        image: "https://images.unsplash.com/photo-1520699697851-3dc68aa3a474?auto=format&fit=crop&q=80&w=600"
+      },
+      {
+        id: 10, name: "وحدة مكتب موظف اقتصادية", enName: "Economy Employee Desk Unit",
+        category: "مكاتب", enCategory: "Desks",
+        usage: "أثاث للموظفين", enUsage: "Employee Furniture",
+        price: 3500,
+        colors: ["#71717a", "#ffffff"],
+        specs: { woodType: "خشب مضغوط عالي الجودة", thickness: "18 مم", chassis: "خشب مع قوائم معدن" },
+        enSpecs: { woodType: "High-Quality Chipboard", thickness: "18mm", chassis: "Wood with Metal Legs" },
+        image: "https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&q=80&w=600"
+      }
+    ];
+
+    let currentLang = 'ar';
+    const i18n = {
+      ar: {
+        home: "الرئيسية",
+        models: "الموديلات",
+        measurement: "المعاينة",
+        cart: "السلة",
+        cockpit: "Cockpit",
+        heroBadge: "رواد الأثاث المكتبي المتكامل في مصر",
+        heroTitle: "أثاث مبهج..<br />لبيئة عمل <span>مبتكرة</span>",
+        heroDesc: "نوفر أحدث تصاميم المكاتب والكراسي وخلايا العمل لشركتك بلمسة عصرية وخامات معتمدة تعزز إنتاجية فريقك.",
+        viewModels: "استعرض الموديلات",
+        requestMeasurement: "اطلب معاينة مجانية",
+        statModels: "موديل متاح",
+        statClients: "عميل راضٍ",
+        statGovs: "محافظات",
+        statQuality: "ضمان جودة",
+        latestModels: "أحدث الموديلات",
+        latestModelsDesc: "صُممت خصيصاً لراحة وإبداع فريقك",
+        filterCat: "التصنيف",
+        filterUse: "الاستخدام",
+        filterAll: "الكل",
+        searchPlaceholder: "ابحث عن موديل...",
+        logisticsTitle: "محرك التجهيزات المتكامل للمقرات الإدارية",
+        logisticsDesc: "بما أننا نصنع خلايا عمل متكاملة، نوفر خدمة المعاينة الميدانية ورفع المقاسات لمقر شركتك لضمان استغلال المساحات بأفضل شكل وبناء بيئة عمل هندسية دقيقة.",
+        featureDelivery: "توصيل آمن وسريع لأي موقع",
+        featureSpecs: "مقايسات هندسية دقيقة للمساحة",
+        featureCoverage: "تغطية: القاهرة، الجيزة، الإسكندرية وأكثر",
+        requestFormTitle: "طلب معاينة موقع مجاناً",
+        companyName: "اسم الشركة / المؤسسة",
+        companyPhone: "رقم هاتف التواصل",
+        province: "المحافظة",
+        confirmBooking: "تأكيد الحجز المجاني",
+        footerDesc: "أثاث يعكس هوية نجاحك. نصنع بيئات عمل متكاملة تعزز إنتاجية فريقك بخامات معتمدة وتصاميم عصرية.",
+        quickLinks: "روابط سريعة",
+        contactUs: "تواصل معنا",
+        adminTitle: "إدارة الموديلات والمخزون",
+        adminDesc: "يمكنك تحديث الأسعار وإضافة موديلات جديدة من هنا",
+        addModel: "إضافة موديل جديد",
+        totalModels: "إجمالي الموديلات",
+        requests: "طلبات معاينة",
+        catalogValue: "إجمالي قيمة الكتالوج",
+        activeProducts: "جدول المنتجات النشطة",
+        searchAdmin: "بحث بالاسم أو الكود...",
+        orderHistory: "سجل الطلبات",
+        measurementRequests: "طلبات المعاينة الميدانية",
+        backToStore: "العودة للمتجر",
+        addToCart: "+ أضف للسلة",
+        inCart: "✓ في السلة",
+        checkout: "إتمام الشراء",
+        total: "الإجمالي",
+        thCode: "الكود",
+        thProduct: "المنتج",
+        thCategory: "التصنيف",
+        thPrice: "السعر الحالي",
+        thActions: "إجراءات",
+        thOrderNo: "رقم الطلب",
+        thCustomer: "العميل",
+        thProducts: "المنتجات",
+        thTotal: "الإجمالي",
+        thGov: "المحافظة",
+        thDate: "التاريخ",
+        thPhone: "رقم الهاتف",
+        country: "القاهرة، مصر",
+        address: "القاهرة، جسر السويس، بجوار محطة مترو النزهة، عمارة 1، الدور 1",
+        viewLocation: "عرض الموقع على الخريطة",
+        aboutTitle: "مرحبًا بكم في <span>ModSeat Cairo</span>",
+        aboutDesc1: "وجهتكم المتخصصة في تصميم وتصنيع الأثاث المكتبي العصري بأعلى معايير الجودة والاحترافية.",
+        aboutDesc2: "نقدم حلولًا متكاملة للأثاث المكتبي تناسب الشركات، المكاتب، والمساحات الإدارية الحديثة، مع التركيز على الجمع بين التصميم الأنيق، الراحة العملية، والمتانة طويلة الأمد. نعتمد في التصنيع على خشب MDF المستورد من تايلاند لضمان جودة عالية وتشطيب احترافي يواكب أحدث الاتجاهات العصرية.",
+        featQuality: "جودة الخامات",
+        featQualityDesc: "نعتمد على خشب MDF المستورد من تايلاند لضمان متانة وتشطيب احترافي يواكب أحدث الاتجاهات العصرية.",
+        featIdentity: "هوية المكان",
+        featIdentityDesc: "نؤمن أن بيئة العمل المريحة والمميزة تساهم في زيادة الإنتاجية وتعكس هوية المكان.",
+        foundedDate: "يونيو 2025",
+        foundedLabel: "تاريخ التأسيس",
+        about: "من نحن"
+      },
+      en: {
+        home: "Home",
+        models: "Models",
+        measurement: "Measurement",
+        cart: "Cart",
+        cockpit: "Cockpit",
+        heroBadge: "Pioneers of integrated office furniture in Egypt",
+        heroTitle: "Cheerful Furniture..<br />For <span>Innovative</span> Spaces",
+        heroDesc: "We provide the latest office designs, chairs, and workstations for your company with a modern touch and certified materials that enhance your team's productivity.",
+        viewModels: "Browse Models",
+        requestMeasurement: "Request Free Measurement",
+        statModels: "Models Available",
+        statClients: "Satisfied Clients",
+        statGovs: "Governorates",
+        statQuality: "Quality Guarantee",
+        latestModels: "Latest Models",
+        latestModelsDesc: "Specifically designed for your team's comfort and creativity",
+        filterCat: "Category",
+        filterUse: "Usage",
+        filterAll: "All",
+        searchPlaceholder: "Search for a model...",
+        logisticsTitle: "Integrated Equipment Engine for Administrative Offices",
+        logisticsDesc: "Since we manufacture integrated workstations, we provide field inspection and measurement services for your company headquarters to ensure optimal space utilization and precise engineering.",
+        featureDelivery: "Safe and fast delivery to any location",
+        featureSpecs: "Precise engineering measurements",
+        featureCoverage: "Coverage: Cairo, Giza, Alexandria & more",
+        requestFormTitle: "Request Free Site Inspection",
+        companyName: "Company / Institution Name",
+        companyPhone: "Contact Phone Number",
+        province: "Province",
+        confirmBooking: "Confirm Free Booking",
+        footerDesc: "Furniture that reflects your identity of success. We create integrated work environments that enhance your team's productivity with certified materials and modern designs.",
+        quickLinks: "Quick Links",
+        contactUs: "Contact Us",
+        adminTitle: "Models & Inventory Management",
+        adminDesc: "Update prices and add new models from here",
+        addModel: "Add New Model",
+        totalModels: "Total Models",
+        requests: "Requests",
+        catalogValue: "Total Catalog Value",
+        activeProducts: "Active Products Table",
+        searchAdmin: "Search by name or code...",
+        orderHistory: "Order History",
+        measurementRequests: "Site Inspection Requests",
+        backToStore: "Back to Store",
+        addToCart: "+ Add to Cart",
+        inCart: "✓ In Cart",
+        checkout: "Checkout",
+        total: "Total",
+        thCode: "Code",
+        thProduct: "Product",
+        thCategory: "Category",
+        thPrice: "Price",
+        thActions: "Actions",
+        thOrderNo: "Order #",
+        thCustomer: "Customer",
+        thProducts: "Products",
+        thTotal: "Total",
+        thGov: "Gov.",
+        thDate: "Date",
+        thPhone: "Phone",
+        country: "Cairo, Egypt",
+        address: "Cairo, Jisr Al-Suez, near Nozha Metro, Bldg 1, 1st Floor",
+        viewLocation: "View Location on Map",
+        aboutTitle: "Welcome to <span>ModSeat Cairo</span>",
+        aboutDesc1: "Your specialized destination for designing and manufacturing modern office furniture with the highest standards of quality and professionalism.",
+        aboutDesc2: "We offer integrated office furniture solutions suitable for companies, offices, and modern administrative spaces, focusing on combining elegant design, practical comfort, and long-term durability. We rely on imported MDF wood from Thailand to ensure high quality and professional finishing that keeps pace with the latest modern trends.",
+        featQuality: "Material Quality",
+        featQualityDesc: "We use imported MDF from Thailand to ensure durability and professional finishing keeping pace with latest trends.",
+        featIdentity: "Workplace Identity",
+        featIdentityDesc: "We believe a comfortable and distinctive work environment boosts productivity and reflects the place's identity.",
+        foundedDate: "June 2025",
+        foundedLabel: "Founded Date",
+        about: "About Us"
+      }
+    };
+
+    function t(key) {
+      return i18n[currentLang][key] || key;
+    }
+
+    function toggleLang() {
+      currentLang = currentLang === 'ar' ? 'en' : 'ar';
+      document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+      document.documentElement.lang = currentLang;
+      updateUI();
+    }
+
+    function updateUI() {
+      // Update static texts
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+          el.placeholder = t(key);
+        } else {
+          el.innerHTML = t(key);
+        }
+      });
+
+      // Re-render dynamic content
+      renderProducts(products);
+      renderFilters();
+      updateAdminStats();
+      if (document.getElementById('admin-panel').classList.contains('show')) {
+        renderAdminProducts();
+        renderOrdersTable();
+        renderMeasurementsTable();
+      }
+    }
+
+    let cart = [];
+    let orders = [];
+    let measurementRequests = [];
+    let nextId = 11;
+    let activeFilters = { type: 'all', value: '' };
+    let currentStep = 1;
+
+    // ===== RENDER PRODUCTS =====
+    function renderProducts(list) {
+      const grid = document.getElementById('products-grid');
+      if (!grid) return;
+      if (!list || list.length === 0) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--muted)"><p style="font-weight:700;font-size:1.1rem">لا توجد منتجات مطابقة</p></div>';
+        return;
+      }
+      grid.innerHTML = list.map((p, i) => {
+        const name = currentLang === 'ar' ? p.name : (p.enName || p.name);
+        const usage = currentLang === 'ar' ? p.usage : (p.enUsage || p.usage);
+        const category = currentLang === 'ar' ? p.category : (p.enCategory || p.category);
+
+        const specRows = Object.entries(currentLang === 'ar' ? p.specs : (p.enSpecs || p.specs)).map(([k, v]) => {
+          const labelsAr = { woodType: "نوع الخشب", thickness: "السماكة", chassis: "الشاسيه", mechanism: "الماكينة", upholstery: "التنجيد", base: "القاعدة", dimensions: "الأبعاد", cladding: "التكسية", shelves: "الأرفف", lock: "القفل", capacity: "السعة" };
+          const labelsEn = { woodType: "Wood Type", thickness: "Thickness", chassis: "Chassis", mechanism: "Mechanism", upholstery: "Upholstery", base: "Base", dimensions: "Dimensions", cladding: "Cladding", shelves: "Shelves", lock: "Lock", capacity: "Capacity" };
+          const label = currentLang === 'ar' ? (labelsAr[k] || k) : (labelsEn[k] || k);
+          return `<li class="product-specs"><span class="spec-key">${label}</span><span class="spec-val">${v}</span></li>`;
+        }).join('');
+
+        const colDots = p.colors.map(c => `<div class="color-dot" style="background:${c}" title="${c}"></div>`).join('');
+        const inCart = cart.find(x => x.id === p.id);
+        const cartControls = inCart ? `
+          <div class="cart-controls">
+            <button class="qty-btn" onclick="changeQty(${p.id}, -1)">−</button>
+            <span class="qty-val">${inCart.qty}</span>
+            <button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button>
+          </div>
+        ` : `
+          <button class="add-cart-btn" onclick="addToCart(${p.id})">
+            ${t('addToCart')}
+          </button>
+        `;
+
+        return `<div class="product-card animate-in" style="animation-delay:${i * 0.07}s">
+      <div class="product-img">
+        <img src="${p.image}" alt="${name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600'">
+        <div class="product-badge">${usage}</div>
+      </div>
+      <div class="product-body">
+        <div class="product-header">
+          <div class="product-name">${name}</div>
+          <div class="product-price">${currentLang === 'ar' ? p.price.toLocaleString('ar-EG') : p.price.toLocaleString('en-US')} ${currentLang === 'ar' ? 'ج.م' : 'EGP'}</div>
+        </div>
+        <ul>${specRows}</ul>
+        <div class="product-footer">
+          <div class="colors-row">${colDots}</div>
+          ${cartControls}
+        </div>
+      </div>
+    </div>`;
+      }).join('');
+    }
+
+    function renderFilters() {
+      const cats = [...new Set(products.map(p => p.category))];
+      const uses = [...new Set(products.map(p => p.usage))];
+      document.getElementById('cat-filters').innerHTML = cats.map(c => `<button class="filter-btn" onclick="applyFilter('category','${c}',this)">${c}</button>`).join('');
+      document.getElementById('use-filters').innerHTML = uses.map(u => `<button class="filter-btn" onclick="applyFilter('usage','${u}',this)">${u}</button>`).join('');
+    }
+
+    function applyFilter(type, value, btn) {
+      activeFilters = { type, value };
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      const q = document.getElementById('search-input').value.trim().toLowerCase();
+      filterAndSearch(q);
+    }
+
+    function searchProducts(q) {
+      filterAndSearch(q.toLowerCase());
+    }
+
+    function filterAndSearch(q) {
+      let list = products;
+      if (activeFilters.type !== 'all' && activeFilters.value) {
+        list = list.filter(p => p[activeFilters.type] === activeFilters.value);
+      }
+      if (q) {
+        const query = q.toLowerCase();
+        list = list.filter(p => {
+          const name = currentLang === 'ar' ? p.name : (p.enName || p.name);
+          const category = currentLang === 'ar' ? p.category : (p.enCategory || p.category);
+          return name.toLowerCase().includes(query) || category.toLowerCase().includes(query);
+        });
+      }
+      renderProducts(list);
+    }
+
+    // ===== CART =====
+    function addToCart(id) {
+      const product = products.find(p => p.id === id);
+      if (!product) return;
+      const existing = cart.find(x => x.id === id);
+      if (existing) {
+        existing.qty++;
+      } else {
+        cart.push({ ...product, qty: 1 });
+      }
+      updateCartUI();
+
+      // Re-run current filter/search to maintain view
+      const q = document.getElementById('search-input') ? document.getElementById('search-input').value : '';
+      filterAndSearch(q);
+
+      showToast(`تمت إضافة "${product.name}" للسلة`, 'success');
+    }
+
+    function updateCartUI() {
+      const count = cart.reduce((s, x) => s + x.qty, 0);
+      const el = document.getElementById('cart-count');
+      el.textContent = count;
+      el.classList.toggle('show', count > 0);
+      renderCartBody();
+    }
+
+    function renderCartBody() {
+      const list = document.getElementById('cart-items-list');
+      const empty = document.getElementById('cart-empty');
+      const foot = document.getElementById('cart-foot');
+
+      if (cart.length === 0) {
+        if (empty) empty.style.display = 'flex';
+        if (list) list.innerHTML = '';
+        if (foot) foot.style.display = 'none';
+        return;
+      }
+
+      if (empty) empty.style.display = 'none';
+      if (foot) foot.style.display = 'block';
+
+      if (list) {
+        list.innerHTML = cart.map(item => {
+          const name = currentLang === 'ar' ? item.name : (item.enName || item.name);
+          return `
+            <div class="cart-item">
+              <img class="cart-item-img" src="${item.image}" alt="${name}" onerror="this.src='https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600'">
+              <div class="cart-item-info">
+                <div class="cart-item-name">${name}</div>
+                <div class="cart-item-price">${currentLang === 'ar' ? (item.price * item.qty).toLocaleString('ar-EG') : (item.price * item.qty).toLocaleString('en-US')} ${currentLang === 'ar' ? 'ج.م' : 'EGP'}</div>
+                <div class="cart-item-actions">
+                  <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
+                  <span class="qty-val">${item.qty}</span>
+                  <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+                  <button class="remove-btn" onclick="removeFromCart(${item.id})">${currentLang === 'ar' ? 'حذف' : 'Remove'}</button>
+                </div>
+              </div>
+            </div>`;
+        }).join('');
+      }
+
+      const total = cart.reduce((s, x) => s + x.price * x.qty, 0);
+      const totalEl = document.getElementById('cart-total-price');
+      if (totalEl) {
+        totalEl.textContent = currentLang === 'ar' ? `${total.toLocaleString('ar-EG')} ج.م` : `${total.toLocaleString('en-US')} EGP`;
+      }
+    }
+
+    function changeQty(id, delta) {
+      const item = cart.find(x => x.id === id);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) removeFromCart(id);
+      else updateCartUI();
+
+      const q = document.getElementById('search-input') ? document.getElementById('search-input').value : '';
+      filterAndSearch(q);
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(x => x.id !== id);
+      const btn = document.getElementById(`cart-btn-${id}`);
+      if (btn) { btn.classList.remove('added'); btn.textContent = '+ أضف للسلة' }
+      updateCartUI();
+    }
+
+    function openCart() { document.getElementById('cart-overlay').classList.add('open'); document.getElementById('cart-drawer').classList.add('open') }
+    function closeCart() { document.getElementById('cart-overlay').classList.remove('open'); document.getElementById('cart-drawer').classList.remove('open') }
+
+    // ===== CHECKOUT =====
+    function openCheckout() {
+      closeCart();
+      currentStep = 1;
+      document.getElementById('checkout-success').style.display = 'none';
+      document.querySelectorAll('[id^=checkout-step-]').forEach(el => el.style.display = 'none');
+      document.getElementById('checkout-step-1').style.display = 'block';
+      updateStepBar(1);
+      document.getElementById('checkout-modal').classList.add('open');
+    }
+    function closeCheckout() { document.getElementById('checkout-modal').classList.remove('open') }
+
+    function updateStepBar(step) {
+      for (let i = 1; i <= 3; i++) {
+        const el = document.getElementById(`step-${i}`);
+        el.classList.remove('active', 'done');
+        if (i < step) el.classList.add('done');
+        else if (i === step) el.classList.add('active');
+      }
+    }
+
+    function goStep(n) {
+      if (n === 2) {
+        const name = document.getElementById('c-name').value.trim();
+        const phone = document.getElementById('c-phone').value.trim();
+        if (!name || !phone) { showToast('الرجاء إدخال الاسم ورقم الهاتف', 'error'); return }
+      }
+      if (n === 3) {
+        const gov = document.getElementById('c-gov').value;
+        const addr = document.getElementById('c-address').value.trim();
+        if (!gov || !addr) { showToast('الرجاء اختيار المحافظة وإدخال العنوان', 'error'); return }
+        buildOrderSummary();
+      }
+      document.querySelectorAll('[id^=checkout-step-]').forEach(el => el.style.display = 'none');
+      document.getElementById(`checkout-step-${n}`).style.display = 'block';
+      updateStepBar(n);
+      currentStep = n;
+    }
+
+    function buildOrderSummary() {
+      const total = cart.reduce((s, x) => s + x.price * x.qty, 0);
+      const rows = cart.map(x => `<div class="order-row"><span>${x.name} × ${x.qty}</span><span>${(x.price * x.qty).toLocaleString('ar-EG')} ج.م</span></div>`).join('');
+      document.getElementById('order-summary').innerHTML = `
+    ${rows}
+    <div class="order-row total"><span>الإجمالي</span><span>${total.toLocaleString('ar-EG')} ج.م</span></div>
+  `;
+    }
+
+    function confirmOrder() {
+      const order = {
+        id: `MS-${String(orders.length + 1).padStart(4, '0')}`,
+        name: document.getElementById('c-name').value,
+        phone: document.getElementById('c-phone').value,
+        gov: document.getElementById('c-gov').value,
+        address: document.getElementById('c-address').value,
+        payment: document.getElementById('c-payment').value,
+        items: [...cart],
+        total: cart.reduce((s, x) => s + x.price * x.qty, 0),
+        date: new Date().toLocaleDateString('ar-EG')
+      };
+
+      // WhatsApp Formatting
+      const itemLines = order.items.map(x => `• ${x.name} (${x.qty} × ${x.price} ج.م)`).join('\n');
+      const message = `طلب جديد: ${order.id}\n\n` +
+        `👤 العميل: ${order.name}\n` +
+        `📞 الهاتف: ${order.phone}\n` +
+        `📍 المحافظة: ${order.gov}\n` +
+        `🏠 العنوان: ${order.address}\n` +
+        `💰 الدفع: ${order.payment === 'cash' ? 'كاش عند الاستلام' : order.payment}\n\n` +
+        `📦 المنتجات:\n${itemLines}\n\n` +
+        `💵 الإجمالي: ${order.total.toLocaleString('ar-EG')} ج.م`;
+
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/201278255584?text=${encodedMessage}`;
+
+      window.open(whatsappUrl, '_blank');
+
+      orders.push(order);
+      document.getElementById('order-number-display').textContent = order.id;
+      document.querySelectorAll('[id^=checkout-step-]').forEach(el => el.style.display = 'none');
+      document.getElementById('checkout-success').style.display = 'block';
+      cart = [];
+      products.forEach(p => { const btn = document.getElementById(`cart-btn-${p.id}`); if (btn) { btn.classList.remove('added'); btn.textContent = '+ أضف للسلة' } });
+      updateCartUI();
+      updateAdminStats();
+    }
+
+    // ===== LOGISTICS =====
+    function submitMeasurement() {
+      const name = document.getElementById('company-name').value.trim();
+      const phone = document.getElementById('company-phone').value.trim();
+      const gov = document.getElementById('company-gov').value;
+      if (!name || !phone || !gov) { showToast('الرجاء إدخال جميع البيانات', 'error'); return }
+
+      const message = `طلب معاينة موقع جديد\n\n` +
+        `🏢 اسم الشركة: ${name}\n` +
+        `📞 رقم الهاتف: ${phone}\n` +
+        `📍 المحافظة: ${gov}`;
+
+      const encodedMessage = encodeURIComponent(message);
+      const whatsappUrl = `https://wa.me/201278255584?text=${encodedMessage}`;
+
+      window.open(whatsappUrl, '_blank');
+
+      measurementRequests.push({ name, phone, gov, date: new Date().toLocaleDateString('ar-EG') });
+      document.getElementById('company-name').value = '';
+      document.getElementById('company-phone').value = '';
+      document.getElementById('company-gov').value = '';
+      updateAdminStats();
+      showToast('تم تحويلك لواتساب لإتمام الطلب بنجاح!', 'success');
+    }
+
+    // ===== ADMIN =====
+    function showAdmin() {
+      document.getElementById('store-view').style.display = 'none';
+      document.getElementById('admin-panel').classList.add('show');
+      renderAdminProducts();
+      updateAdminStats();
+    }
+
+    function showStore() {
+      document.getElementById('admin-panel').classList.remove('show');
+      document.getElementById('store-view').style.display = 'block';
+    }
+
+    function setAdminTab(tab, btn) {
+      document.querySelectorAll('.admin-nav-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('admin-products-tab').style.display = tab === 'products' ? 'block' : 'none';
+      document.getElementById('admin-orders-tab').style.display = tab === 'orders' ? 'block' : 'none';
+      document.getElementById('admin-measurements-tab').style.display = tab === 'measurements' ? 'block' : 'none';
+
+      if (tab === 'orders') renderOrdersTable();
+      if (tab === 'measurements') renderMeasurementsTable();
+    }
+
+    function renderAdminProducts(list) {
+      list = list || products;
+      const tbody = document.getElementById('admin-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = list.map(p => `
+    <tr>
+      <td><span style="font-family:monospace;font-weight:700;color:var(--muted)">#MS-${String(p.id).padStart(4, '0')}</span></td>
+      <td><div class="product-cell">
+        <img src="${p.image}" alt="${p.name}" onerror="this.src='https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600'">
+        <div><div style="font-weight:700">${p.name}</div><div style="font-size:.78rem;color:var(--primary);font-weight:600">${p.usage}</div></div>
+      </div></td>
+      <td><span class="category-tag">${p.category}</span></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:.5rem">
+          <input class="price-input" type="number" id="price-${p.id}" value="${p.price}">
+          <span style="font-size:.8rem;color:var(--muted);font-weight:600">ج.م</span>
+        </div>
+      </td>
+      <td><div class="table-actions">
+        <button class="btn-update" onclick="updatePrice(${p.id})">تحديث</button>
+        <button class="btn-delete" onclick="deleteProduct(${p.id})">إزالة</button>
+      </div></td>
+    </tr>
+  `).join('');
+    }
+
+    function updatePrice(id) {
+      const input = document.getElementById(`price-${id}`);
+      const newPrice = parseInt(input.value);
+      if (!newPrice || newPrice <= 0) { showToast('سعر غير صالح', 'error'); return }
+      const p = products.find(x => x.id === id);
+      if (p) {
+        p.price = newPrice;
+        renderProducts(products);
+        updateAdminStats();
+        showToast(`تم تحديث سعر "${p.name}" بنجاح`, 'success');
+      }
+    }
+
+    function deleteProduct(id) {
+      const p = products.find(x => x.id === id);
+      if (!p) return;
+      if (!confirm(`هل أنت متأكد من إزالة "${p.name}"؟`)) return;
+      products = products.filter(x => x.id !== id);
+      cart = cart.filter(x => x.id !== id);
+      renderAdminProducts();
+      renderProducts(products);
+      renderFilters();
+      updateAdminStats();
+      updateCartUI();
+      showToast(`تم إزالة "${p.name}" بنجاح`, 'success');
+    }
+
+    function searchAdminProducts(q) {
+      const list = products.filter(p => p.name.includes(q) || p.category.includes(q));
+      renderAdminProducts(list);
+    }
+
+    function updateAdminStats() {
+      const totalEl = document.getElementById('admin-total-products');
+      const reqEl = document.getElementById('admin-total-requests');
+      const valEl = document.getElementById('admin-catalog-value');
+      if (totalEl) totalEl.textContent = products.length;
+      if (reqEl) reqEl.textContent = measurementRequests.length + orders.length;
+      if (valEl) valEl.textContent = products.reduce((s, p) => s + p.price, 0).toLocaleString('ar-EG') + ' ج.م';
+      document.getElementById('stat-models').textContent = products.length;
+    }
+
+    function renderOrdersTable() {
+      const tbody = document.getElementById('orders-tbody');
+      if (!tbody) return;
+      if (orders.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--muted);font-weight:600">لا توجد طلبات بعد</td></tr>'; return }
+      tbody.innerHTML = orders.map(o => `
+    <tr>
+      <td style="font-weight:700;color:var(--primary)">${o.id}</td>
+      <td><div style="font-weight:700">${o.name}</div><div style="font-size:.78rem;color:var(--muted)">${o.phone}</div></td>
+      <td>${o.items.map(x => `${x.name} (${x.qty})`).join('، ')}</td>
+      <td style="font-weight:700;color:var(--primary)">${o.total.toLocaleString('ar-EG')} ج.م</td>
+      <td>${o.gov}</td>
+      <td style="color:var(--muted)">${o.date}</td>
+    </tr>
+  `).join('');
+    }
+
+    function renderMeasurementsTable() {
+      const tbody = document.getElementById('measurements-tbody');
+      if (!tbody) return;
+      if (measurementRequests.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:2rem;color:var(--muted);font-weight:600">لا توجد طلبات معاينة بعد</td></tr>';
+        return;
+      }
+      tbody.innerHTML = measurementRequests.map(r => `
+        <tr>
+          <td style="font-weight:700">${r.name}</td>
+          <td style="font-weight:600;color:var(--primary)">${r.phone}</td>
+          <td><span class="category-tag">${r.gov}</span></td>
+          <td style="color:var(--muted)">${r.date}</td>
+        </tr>
+      `).join('');
+    }
+
+    // ===== CLOUDINARY UPLOAD =====
+    async function uploadToCloudinary(file) {
+      const cloudName = 'dwrhl6gjf';
+      const uploadPreset = 'asr-kareem';
+      const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', uploadPreset);
+
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          body: formData
+        });
+        const data = await response.json();
+        if (data.secure_url) {
+          return data.secure_url;
+        } else {
+          throw new Error(data.error?.message || 'فشل الرفع');
+        }
+      } catch (error) {
+        console.error('Cloudinary Error:', error);
+        throw error;
+      }
+    }
+
+    // ===== ADD PRODUCT =====
+    function openAddProductModal() {
+      document.getElementById('add-product-modal').classList.add('open');
+    }
+    function closeAddProduct() {
+      document.getElementById('add-product-modal').classList.remove('open');
+    }
+    async function addNewProduct() {
+      const name = document.getElementById('np-name').value.trim();
+      const price = parseInt(document.getElementById('np-price').value);
+      const category = document.getElementById('np-category').value;
+      const usage = document.getElementById('np-usage').value;
+
+      const fileInput = document.getElementById('np-image-file');
+      const urlInput = document.getElementById('np-image-url');
+      const uploadStatus = document.getElementById('upload-status');
+
+      const specsRaw = document.getElementById('np-specs').value.trim();
+
+      if (!name || !price) { showToast('الرجاء إدخال اسم المنتج والسعر على الأقل', 'error'); return }
+
+      let imageUrl = urlInput.value.trim();
+
+      // If file is selected, upload it
+      if (fileInput.files.length > 0) {
+        uploadStatus.style.display = 'block';
+        uploadStatus.textContent = 'جاري رفع الصورة...';
+        try {
+          imageUrl = await uploadToCloudinary(fileInput.files[0]);
+          uploadStatus.style.display = 'none';
+        } catch (error) {
+          uploadStatus.style.display = 'none';
+          showToast('فشل رفع الصورة: ' + error.message, 'error');
+          return;
+        }
+      }
+
+      const specs = {};
+      if (specsRaw) {
+        specsRaw.split('\n').forEach(line => {
+          const [k, ...v] = line.split(':');
+          if (k && v.length) specs[k.trim()] = v.join(':').trim();
+        });
+      }
+      const newProduct = {
+        id: nextId++, name, category, usage, price,
+        colors: ['#0d9488', '#d97706'],
+        specs: Object.keys(specs).length ? specs : { نوع: 'غير محدد' },
+        image: imageUrl || 'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&q=80&w=600'
+      };
+      products.push(newProduct);
+
+      // Reset form
+      document.getElementById('np-name').value = '';
+      document.getElementById('np-price').value = '';
+      urlInput.value = '';
+      fileInput.value = '';
+      document.getElementById('np-specs').value = '';
+
+      renderAdminProducts();
+      renderProducts(products);
+      renderFilters();
+      updateAdminStats();
+      closeAddProduct();
+      showToast(`تم إضافة "${name}" بنجاح!`, 'success');
+    }
+
+    // ===== TOAST =====
+    function showToast(msg, type = '') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = `toast show ${type}`;
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => { t.className = 'toast' }, 3000);
+    }
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', () => {
+      // Splash screen logic
+      setTimeout(() => {
+        const splash = document.getElementById('splash-screen');
+        splash.classList.add('hidden');
+        // Remove from DOM after transition
+        setTimeout(() => splash.remove(), 1000);
+      }, 3000);
+
+      renderProducts(products);
+      renderFilters();
+      updateAdminStats();
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeCart(); closeCheckout(); closeAddProduct() } });
+    });
+  </script>
+</body>
+
+</html>
