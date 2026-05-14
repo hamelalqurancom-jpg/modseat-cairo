@@ -1096,16 +1096,19 @@
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, .6);
-      z-index: 300;
+      background: rgba(0, 0, 0, .65);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 2000;
       opacity: 0;
       pointer-events: none;
-      transition: opacity .3s;
+      transition: all .3s;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0.5rem;
+      padding: 1.5rem;
     }
+
 
     .modal-overlay.open {
       opacity: 1;
@@ -2108,6 +2111,14 @@
         max-height: 90vh !important;
         height: auto !important;
         overflow-y: auto;
+      }
+
+      #product-modal .close-btn {
+        top: 15px !important;
+        right: 15px !important;
+        width: 36px !important;
+        height: 36px !important;
+        background: rgba(15, 23, 42, 0.9) !important;
       }
     }
 
@@ -3303,11 +3314,10 @@
     </div>
   </div>
 
-  <!-- PRODUCT DETAILS MODAL -->
   <div id="product-modal" class="modal-overlay">
-    <div class="modal" style="max-width:900px; padding:0; overflow:hidden">
+    <div class="modal" style="max-width:900px; padding:0; overflow-y:auto; border:none; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5)">
       <button class="close-btn" onclick="closeProductModal()"
-        style="position:absolute; top:15px; left:15px; z-index:10; background:rgba(255,255,255,0.8); border-radius:50%; width:32px; height:32px">✕</button>
+        style="position:absolute; top:20px; right:20px; z-index:100; background:var(--text); color:#fff; border-radius:50%; width:40px; height:40px; display:flex; align-items:center; justify-content:center; border:none; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.2); font-size:1.2rem">✕</button>
       <div class="product-details-grid">
         <div class="details-image">
           <img id="details-img" src="" alt="">
