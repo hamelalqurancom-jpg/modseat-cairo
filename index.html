@@ -634,6 +634,58 @@
       gap: 1.5rem;
     }
 
+    @media (max-width: 680px) {
+      .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+      }
+
+      .product-img {
+        height: 140px;
+      }
+
+      .product-body {
+        padding: 0.75rem;
+      }
+
+      .product-name {
+        font-size: 0.82rem;
+        line-height: 1.3;
+      }
+
+      .product-price {
+        font-size: 0.9rem;
+      }
+
+      .product-specs li {
+        font-size: 0.72rem;
+        padding: 4px 0;
+      }
+
+      .add-cart-btn {
+        padding: 8px 10px;
+        font-size: 0.75rem;
+        gap: 4px;
+      }
+
+      .color-dot {
+        width: 16px;
+        height: 16px;
+      }
+
+      .product-footer {
+        gap: 0.4rem;
+        flex-wrap: wrap;
+      }
+
+      .product-badge {
+        font-size: 0.65rem;
+        padding: 3px 8px;
+        top: 8px;
+        right: 8px;
+      }
+    }
+
     .product-card {
       background: var(--glass-bg);
       backdrop-filter: blur(10px);
@@ -1029,7 +1081,6 @@
       box-shadow: 0 8px 24px rgba(13, 148, 136, .35)
     }
 
-    /* ===== CHECKOUT MODAL ===== */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -1041,7 +1092,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1rem;
+      padding: 0.5rem;
     }
 
     .modal-overlay.open {
@@ -1054,7 +1105,7 @@
       border-radius: var(--radius-lg);
       width: 100%;
       max-width: 640px;
-      max-height: 90vh;
+      max-height: 95vh;
       overflow-y: auto;
       transform: scale(.95) translateY(20px);
       transition: transform .3s;
@@ -1063,6 +1114,184 @@
 
     .modal-overlay.open .modal {
       transform: scale(1) translateY(0)
+    }
+
+    /* Color & Size Tag styles */
+    .color-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px 5px 8px;
+      border-radius: 20px;
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      font-size: .78rem;
+      font-weight: 700;
+      cursor: default;
+      transition: all .15s;
+    }
+
+    .color-tag .swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(0, 0, 0, .15);
+      flex-shrink: 0;
+    }
+
+    .color-tag .remove-tag {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, .1);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .7rem;
+      color: var(--text);
+      padding: 0;
+      line-height: 1;
+    }
+
+    .color-tag .remove-tag:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .size-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 10px;
+      border-radius: 20px;
+      background: var(--primary-light);
+      border: 1.5px solid rgba(13, 148, 136, .25);
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .size-tag .remove-tag {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: rgba(13, 148, 136, .2);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .7rem;
+      color: var(--primary-dark);
+      padding: 0;
+      line-height: 1;
+    }
+
+    .size-tag .remove-tag:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    /* Product card color/size selector */
+    .color-selector {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .color-swatch {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2.5px solid rgba(255, 255, 255, .8);
+      box-shadow: 0 0 0 1.5px var(--border);
+      cursor: pointer;
+      transition: all .2s;
+      position: relative;
+    }
+
+    .color-swatch:hover {
+      transform: scale(1.25);
+    }
+
+    .color-swatch.selected {
+      box-shadow: 0 0 0 2.5px var(--primary);
+      transform: scale(1.15);
+    }
+
+    .size-selector {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .size-chip {
+      padding: 3px 10px;
+      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      font-size: .72rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+      color: var(--text);
+      font-family: 'Cairo', sans-serif;
+    }
+
+    .size-chip:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .size-chip.selected {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .selected-opts-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      background: var(--primary-light);
+      padding: 3px 10px;
+      border-radius: 8px;
+      margin-top: 6px;
+      border: 1px solid rgba(13, 148, 136, .2);
+    }
+
+    @media (max-width: 540px) {
+      .modal-body {
+        padding: 1rem;
+      }
+
+      .modal-head {
+        padding: 1rem 1.25rem;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .modal-actions {
+        flex-direction: column-reverse;
+        gap: .5rem;
+      }
+
+      .modal-actions .btn-back,
+      .modal-actions .btn-next {
+        width: 100%;
+        justify-content: center;
+      }
     }
 
     .modal-head {
@@ -1887,6 +2116,10 @@
 
     .toast.error {
       background: #ef4444
+    }
+
+    .toast.info {
+      background: #3b82f6
     }
 
     /* ===== FOOTER ===== */
@@ -2740,13 +2973,63 @@
         </div>
         <div class="form-group">
           <label>صورة المنتج</label>
-          <div style="display:flex;gap:10px;align-items:center">
-            <input type="file" id="np-image-file" accept="image/*" style="flex:1">
-            <input type="url" id="np-image-url" placeholder="أو رابط الصورة..." style="flex:1">
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <input type="file" id="np-image-file" accept="image/*" style="flex:1;min-width:0">
+            <input type="url" id="np-image-url" placeholder="أو رابط الصورة..." style="flex:1;min-width:0">
           </div>
           <div id="upload-status" style="font-size:0.8rem;margin-top:4px;color:var(--primary);display:none">جاري
             الرفع...</div>
         </div>
+
+        <!-- COLORS SECTION -->
+        <div class="form-group">
+          <label>الألوان المتاحة (يمكنك إضافة صورة لكل لون)</label>
+          <div id="np-colors-list"
+            style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;min-height:36px;align-items:center"></div>
+          <div
+            style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--bg);padding:12px;border-radius:12px;border:1px solid var(--border)">
+            <div style="display:flex;gap:8px;align-items:center;width:100%;margin-bottom:8px">
+              <input type="color" id="np-color-picker" value="#0d9488"
+                style="width:44px;height:38px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;padding:2px;background:var(--surface)">
+              <input type="text" id="np-color-name" placeholder="اسم اللون (مثال: خشبي فاتح)..."
+                style="flex:1;min-width:120px;padding:10px 14px;border-radius:10px;border:1.5px solid var(--border);font-family:'Cairo',sans-serif;font-size:.88rem;background:var(--surface);color:var(--text);outline:none">
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;width:100%">
+              <div style="position:relative;flex:1">
+                <input type="file" id="np-color-image-file" accept="image/*"
+                  style="position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2">
+                <div
+                  style="padding:10px;border:1.5px dashed var(--primary);border-radius:10px;text-align:center;font-size:0.75rem;color:var(--primary);font-weight:700">
+                  🖼️ ارفع صورة للون</div>
+              </div>
+              <input type="url" id="np-color-image-url" placeholder="أو رابط الصورة..."
+                style="flex:1.5;min-width:120px;padding:10px 14px;border-radius:10px;border:1.5px solid var(--border);font-family:'Cairo',sans-serif;font-size:.82rem;background:var(--surface);color:var(--text);outline:none">
+              <button type="button" onclick="addColorToList()"
+                style="padding:12px 20px;border-radius:10px;background:var(--primary);color:#fff;border:none;font-family:'Cairo',sans-serif;font-weight:900;font-size:.85rem;cursor:pointer;white-space:nowrap;box-shadow:0 4px 12px rgba(20,184,166,0.2)">+
+                إضافة</button>
+            </div>
+          </div>
+          <small style="color:var(--muted);font-size:.75rem;margin-top:4px;display:block">الصورة اختيارية، إذا لم ترفعها
+            ستظهر الصورة الرئيسية للمنتج</small>
+        </div>
+
+        <!-- SIZES SECTION -->
+        <div class="form-group">
+          <label>المقاسات المتاحة</label>
+          <div id="np-sizes-list"
+            style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;min-height:36px;align-items:center"></div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <input type="text" id="np-size-input" placeholder="مثال: صغير، وسط، كبير، 120×60 سم..."
+              style="flex:1;min-width:150px;padding:10px 14px;border-radius:10px;border:1.5px solid var(--border);font-family:'Cairo',sans-serif;font-size:.88rem;background:var(--bg);color:var(--text);outline:none"
+              onkeydown="if(event.key==='Enter'){addSizeToList();event.preventDefault()}">
+            <button type="button" onclick="addSizeToList()"
+              style="padding:10px 16px;border-radius:10px;background:var(--primary);color:#fff;border:none;font-family:'Cairo',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;white-space:nowrap">+
+              إضافة</button>
+          </div>
+          <small style="color:var(--muted);font-size:.75rem;margin-top:4px;display:block">اكتب المقاس واضغط إضافة أو
+            Enter</small>
+        </div>
+
         <div class="form-group"><label>المواصفات (مثال: الخشب: MDF إسباني، السماكة: 36مم)</label><textarea id="np-specs"
             placeholder="الخشب: MDF إسباني&#10;السماكة: 36 مم&#10;الشاسيه: معدن"></textarea></div>
         <div class="modal-actions">
@@ -2767,7 +3050,29 @@
     <div class="toast" id="toast"></div>
   </div>
 
+  <!-- FIREBASE SDKS -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics-compat.js"></script>
+
   <script>
+    // ===== FIREBASE CONFIGURATION =====
+    // استبدل القيم أدناه ببيانات مشروعك من Firebase Console
+    const firebaseConfig = {
+      apiKey: "AIzaSyA6fnq6E4P4aLvtOLRfUogPNLV__MIlcD8",
+      authDomain: "dddd-3161a.firebaseapp.com",
+      projectId: "dddd-3161a",
+      storageBucket: "dddd-3161a.firebasestorage.app",
+      messagingSenderId: "295943367803",
+      appId: "1:295943367803:web:5c859045aad563af4a06de",
+      measurementId: "G-M3FJ7TGZYJ"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const analytics = firebase.analytics();
+
     // ===== DATA =====
     // ===== DATA =====
     let products = [
@@ -2874,6 +3179,66 @@
     ];
 
     let currentLang = 'ar';
+
+    // ===== FIREBASE SYNC LOGIC =====
+    const dbSync = {
+      async getProducts() {
+        try {
+          const snapshot = await db.collection('products').orderBy('id', 'asc').get();
+          if (snapshot.empty) return null;
+          return snapshot.docs.map(doc => doc.data());
+        } catch (e) {
+          console.error("Error fetching products:", e);
+          return null;
+        }
+      },
+      async saveProduct(p) {
+        try {
+          await db.collection('products').doc(String(p.id)).set(p);
+        } catch (e) {
+          console.error("Error saving product:", e);
+        }
+      },
+      async deleteProduct(id) {
+        try {
+          await db.collection('products').doc(String(id)).delete();
+        } catch (e) {
+          console.error("Error deleting product:", e);
+        }
+      },
+      async getOrders() {
+        try {
+          const snapshot = await db.collection('orders').orderBy('date', 'desc').get();
+          return snapshot.docs.map(doc => doc.data());
+        } catch (e) {
+          console.error("Error fetching orders:", e);
+          return [];
+        }
+      },
+      async saveOrder(order) {
+        try {
+          await db.collection('orders').doc(order.id).set(order);
+        } catch (e) {
+          console.error("Error saving order:", e);
+        }
+      },
+      async getMeasurements() {
+        try {
+          const snapshot = await db.collection('measurements').orderBy('date', 'desc').get();
+          return snapshot.docs.map(doc => doc.data());
+        } catch (e) {
+          console.error("Error fetching measurements:", e);
+          return [];
+        }
+      },
+      async saveMeasurement(req) {
+        try {
+          await db.collection('measurements').add(req);
+        } catch (e) {
+          console.error("Error saving measurement:", e);
+        }
+      }
+    };
     const i18n = {
       ar: {
         home: "الرئيسية",
@@ -3087,7 +3452,24 @@
           return `<li class="product-specs"><span class="spec-key">${label}</span><span class="spec-val">${v}</span></li>`;
         }).join('');
 
-        const colDots = p.colors.map(c => `<div class="color-dot" style="background:${c}" title="${c}"></div>`).join('');
+        // Color selector
+        const colors = p.colors || [];
+        const colSwatches = colors.map((c, ci) => {
+          const hex = typeof c === 'object' ? c.hex : c;
+          const cname = typeof c === 'object' ? c.name : c;
+          return `<div class="color-swatch" style="background:${hex}" title="${cname}" data-color-hex="${hex}" data-color-name="${cname}" onclick="selectColor(${p.id}, ${ci}, this)"></div>`;
+        }).join('');
+
+        // Size selector
+        const sizes = p.sizes || [];
+        const sizeChips = sizes.map((s, si) =>
+          `<span class="size-chip" data-size="${s}" onclick="selectSize(${p.id}, ${si}, this)">${s}</span>`
+        ).join('');
+        const sizesSection = sizes.length > 0 ? `<div class="size-selector" id="sizes-${p.id}">${sizeChips}</div>` : '';
+
+        // Selected options badge
+        const selectedBadge = `<div id="selected-badge-${p.id}" class="selected-opts-badge" style="display:none"></div>`;
+
         const inCart = cart.find(x => x.id === p.id);
         const cartControls = inCart ? `
           <div class="cart-controls">
@@ -3096,14 +3478,14 @@
             <button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button>
           </div>
         ` : `
-          <button class="add-cart-btn" onclick="addToCart(${p.id})">
+          <button class="add-cart-btn" id="cart-btn-${p.id}" onclick="addToCart(${p.id})">
             ${t('addToCart')}
           </button>
         `;
 
         return `<div class="product-card animate-in" style="animation-delay:${i * 0.07}s">
       <div class="product-img">
-        <img src="${p.image}" alt="${name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600'">
+        <img id="main-img-${p.id}" src="${p.image}" alt="${name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600'">
         <div class="product-badge">${usage}</div>
       </div>
       <div class="product-body">
@@ -3112,13 +3494,66 @@
           <div class="product-price">${currentLang === 'ar' ? p.price.toLocaleString('ar-EG') : p.price.toLocaleString('en-US')} ${currentLang === 'ar' ? 'ج.م' : 'EGP'}</div>
         </div>
         <ul>${specRows}</ul>
+        ${colors.length > 0 ? `<div class="color-selector" id="colors-${p.id}">${colSwatches}</div>` : ''}
+        ${sizesSection}
+        ${selectedBadge}
         <div class="product-footer">
-          <div class="colors-row">${colDots}</div>
+          <div style="flex:1"></div>
           ${cartControls}
         </div>
       </div>
     </div>`;
       }).join('');
+    }
+
+    function selectColor(pid, idx, el) {
+      const p = products.find(x => x.id === pid);
+      if (!p) return;
+      const c = p.colors[idx];
+      const hex = typeof c === 'object' ? c.hex : c;
+      const name = typeof c === 'object' ? c.name : c;
+      const img = typeof c === 'object' ? c.image : null;
+
+      // Highlight swatch
+      const parent = document.getElementById(`colors-${pid}`);
+      parent.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+      el.classList.add('selected');
+
+      // Change image
+      if (img) {
+        document.getElementById(`main-img-${pid}`).src = img;
+      } else {
+        // Fallback to main image
+        document.getElementById(`main-img-${pid}`).src = p.image;
+      }
+
+      // Update badge
+      const badge = document.getElementById(`selected-badge-${pid}`);
+      badge.style.display = 'inline-flex';
+      badge.textContent = `${currentLang === 'ar' ? 'اللون: ' : 'Color: '} ${name}`;
+
+      p._selectedColor = c;
+    }
+
+    function selectSize(pid, idx, el) {
+      const p = products.find(x => x.id === pid);
+      if (!p) return;
+      const s = p.sizes[idx];
+
+      // Highlight chip
+      const parent = document.getElementById(`sizes-${pid}`);
+      parent.querySelectorAll('.size-chip').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+
+      // Update badge
+      const badge = document.getElementById(`selected-badge-${pid}`);
+      badge.style.display = 'inline-flex';
+      const colorName = p._selectedColor ? (typeof p._selectedColor === 'object' ? p._selectedColor.name : p._selectedColor) : '';
+      badge.textContent = colorName ?
+        `${currentLang === 'ar' ? 'اللون: ' : 'Color: '} ${colorName} | ${currentLang === 'ar' ? 'المقاس: ' : 'Size: '} ${s}` :
+        `${currentLang === 'ar' ? 'المقاس: ' : 'Size: '} ${s}`;
+
+      p._selectedSize = s;
     }
 
     function renderFilters() {
@@ -3294,7 +3729,7 @@
   `;
     }
 
-    function confirmOrder() {
+    async function confirmOrder() {
       const order = {
         id: `MS-${String(orders.length + 1).padStart(4, '0')}`,
         name: document.getElementById('c-name').value,
@@ -3302,13 +3737,26 @@
         gov: document.getElementById('c-gov').value,
         address: document.getElementById('c-address').value,
         payment: document.getElementById('c-payment').value,
-        items: [...cart],
+        items: cart.map(item => ({
+          id: item.id,
+          name: item.name,
+          qty: item.qty,
+          price: item.price,
+          selectedColor: item._selectedColor || null,
+          selectedSize: item._selectedSize || null
+        })),
         total: cart.reduce((s, x) => s + x.price * x.qty, 0),
         date: new Date().toLocaleDateString('ar-EG')
       };
 
       // WhatsApp Formatting
-      const itemLines = order.items.map(x => `• ${x.name} (${x.qty} × ${x.price} ج.م)`).join('\n');
+      const itemLines = order.items.map(x => {
+        let line = `• ${x.name} (${x.qty} × ${x.price} ج.م)`;
+        if (x.selectedColor) line += ` [اللون: ${typeof x.selectedColor === 'object' ? x.selectedColor.name : x.selectedColor}]`;
+        if (x.selectedSize) line += ` [المقاس: ${x.selectedSize}]`;
+        return line;
+      }).join('\n');
+
       const message = `طلب جديد: ${order.id}\n\n` +
         `👤 العميل: ${order.name}\n` +
         `📞 الهاتف: ${order.phone}\n` +
@@ -3323,7 +3771,9 @@
 
       window.open(whatsappUrl, '_blank');
 
+      await dbSync.saveOrder(order);
       orders.push(order);
+
       document.getElementById('order-number-display').textContent = order.id;
       document.querySelectorAll('[id^=checkout-step-]').forEach(el => el.style.display = 'none');
       document.getElementById('checkout-success').style.display = 'block';
@@ -3334,7 +3784,7 @@
     }
 
     // ===== LOGISTICS =====
-    function submitMeasurement() {
+    async function submitMeasurement() {
       const name = document.getElementById('company-name').value.trim();
       const phone = document.getElementById('company-phone').value.trim();
       const gov = document.getElementById('company-gov').value;
@@ -3350,7 +3800,10 @@
 
       window.open(whatsappUrl, '_blank');
 
-      measurementRequests.push({ name, phone, gov, date: new Date().toLocaleDateString('ar-EG') });
+      const req = { name, phone, gov, date: new Date().toLocaleDateString('ar-EG') };
+      await dbSync.saveMeasurement(req);
+      measurementRequests.push(req);
+
       document.getElementById('company-name').value = '';
       document.getElementById('company-phone').value = '';
       document.getElementById('company-gov').value = '';
@@ -3408,25 +3861,29 @@
   `).join('');
     }
 
-    function updatePrice(id) {
+    async function updatePrice(id) {
       const input = document.getElementById(`price-${id}`);
       const newPrice = parseInt(input.value);
       if (!newPrice || newPrice <= 0) { showToast('سعر غير صالح', 'error'); return }
       const p = products.find(x => x.id === id);
       if (p) {
         p.price = newPrice;
+        await dbSync.saveProduct(p);
         renderProducts(products);
         updateAdminStats();
         showToast(`تم تحديث سعر "${p.name}" بنجاح`, 'success');
       }
     }
 
-    function deleteProduct(id) {
+    async function deleteProduct(id) {
       const p = products.find(x => x.id === id);
       if (!p) return;
       if (!confirm(`هل أنت متأكد من إزالة "${p.name}"؟`)) return;
+
+      await dbSync.deleteProduct(id);
       products = products.filter(x => x.id !== id);
       cart = cart.filter(x => x.id !== id);
+
       renderAdminProducts();
       renderProducts(products);
       renderFilters();
@@ -3511,7 +3968,85 @@
     }
 
     // ===== ADD PRODUCT =====
+    // ===== ADD PRODUCT UTILS =====
+    let tempColors = [];
+    let tempSizes = [];
+
+    async function addColorToList() {
+      const hex = document.getElementById('np-color-picker').value;
+      const name = document.getElementById('np-color-name').value.trim();
+      const fileInput = document.getElementById('np-color-image-file');
+      const urlInput = document.getElementById('np-color-image-url');
+
+      if (!name) { showToast('الرجاء إدخال اسم اللون', 'error'); return; }
+
+      let imgUrl = urlInput.value.trim();
+      if (fileInput.files.length > 0) {
+        showToast('جاري رفع صورة اللون...', 'info');
+        try {
+          imgUrl = await uploadToCloudinary(fileInput.files[0]);
+        } catch (e) {
+          showToast('فشل رفع صورة اللون', 'error');
+          return;
+        }
+      }
+
+      tempColors.push({ hex, name, image: imgUrl });
+      renderTempColors();
+
+      // Reset inputs
+      document.getElementById('np-color-name').value = '';
+      fileInput.value = '';
+      urlInput.value = '';
+    }
+
+    function renderTempColors() {
+      const list = document.getElementById('np-colors-list');
+      list.innerHTML = tempColors.map((c, i) => `
+        <div class="color-tag">
+          <div class="swatch" style="background:${c.hex}"></div>
+          <span>${c.name}</span>
+          ${c.image ? '<span style="font-size:10px;opacity:0.6" title="تم إرفاق صورة">🖼️</span>' : ''}
+          <button class="remove-tag" onclick="removeTempColor(${i})">×</button>
+        </div>
+      `).join('');
+    }
+
+    function removeTempColor(i) {
+      tempColors.splice(i, 1);
+      renderTempColors();
+    }
+
+    function addSizeToList() {
+      const val = document.getElementById('np-size-input').value.trim();
+      if (!val) return;
+      if (tempSizes.includes(val)) return;
+      tempSizes.push(val);
+      renderTempSizes();
+      document.getElementById('np-size-input').value = '';
+    }
+
+    function renderTempSizes() {
+      const list = document.getElementById('np-sizes-list');
+      list.innerHTML = tempSizes.map((s, i) => `
+        <div class="size-tag">
+          <span>${s}</span>
+          <button class="remove-tag" onclick="removeTempSize(${i})">×</button>
+        </div>
+      `).join('');
+    }
+
+    function removeTempSize(i) {
+      tempSizes.splice(i, 1);
+      renderTempSizes();
+    }
+
+    // ===== ADD PRODUCT =====
     function openAddProductModal() {
+      tempColors = [];
+      tempSizes = [];
+      renderTempColors();
+      renderTempSizes();
       document.getElementById('add-product-modal').classList.add('open');
     }
     function closeAddProduct() {
@@ -3536,7 +4071,7 @@
       // If file is selected, upload it
       if (fileInput.files.length > 0) {
         uploadStatus.style.display = 'block';
-        uploadStatus.textContent = 'جاري رفع الصورة...';
+        uploadStatus.textContent = 'جاري رفع الصورة الرئيسية...';
         try {
           imageUrl = await uploadToCloudinary(fileInput.files[0]);
           uploadStatus.style.display = 'none';
@@ -3554,12 +4089,20 @@
           if (k && v.length) specs[k.trim()] = v.join(':').trim();
         });
       }
+
       const newProduct = {
-        id: nextId++, name, category, usage, price,
-        colors: ['#0d9488', '#d97706'],
-        specs: Object.keys(specs).length ? specs : { نوع: 'غير محدد' },
-        image: imageUrl || 'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&q=80&w=600'
+        id: nextId++,
+        name,
+        category,
+        usage,
+        price,
+        colors: tempColors.length ? [...tempColors] : ['#0d9488'],
+        sizes: [...tempSizes],
+        specs: Object.entries(specs).length ? specs : { نوع: 'غير محدد' },
+        image: imageUrl || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600'
       };
+
+      await dbSync.saveProduct(newProduct);
       products.push(newProduct);
 
       // Reset form
@@ -3568,6 +4111,8 @@
       urlInput.value = '';
       fileInput.value = '';
       document.getElementById('np-specs').value = '';
+      tempColors = [];
+      tempSizes = [];
 
       renderAdminProducts();
       renderProducts(products);
@@ -3587,14 +4132,29 @@
     }
 
     // ===== INIT =====
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       // Splash screen logic
       setTimeout(() => {
         const splash = document.getElementById('splash-screen');
-        splash.classList.add('hidden');
+        if (splash) splash.classList.add('hidden');
         // Remove from DOM after transition
-        setTimeout(() => splash.remove(), 1000);
+        setTimeout(() => splash && splash.remove(), 1000);
       }, 3000);
+
+      // Load from Firebase
+      const [cloudProducts, cloudOrders, cloudMeasurements] = await Promise.all([
+        dbSync.getProducts(),
+        dbSync.getOrders(),
+        dbSync.getMeasurements()
+      ]);
+
+      if (cloudProducts && cloudProducts.length > 0) {
+        products = cloudProducts;
+        nextId = Math.max(...products.map(p => p.id)) + 1;
+      }
+
+      if (cloudOrders) orders = cloudOrders;
+      if (cloudMeasurements) measurementRequests = cloudMeasurements;
 
       renderProducts(products);
       renderFilters();
